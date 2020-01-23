@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PantallaJuego">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="343dp"
+        android:layout_height="390dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginBottom="78dp"
+        app:layout_constraintBottom_toTopOf="@+id/Izq"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:color/background_dark" />
+
+    <ImageView
+        android:id="@+id/proximapieza"
+        android:layout_width="105dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="263dp"
+        android:layout_marginBottom="35dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@color/colorAccent" />
+
+    <ImageButton
+        android:id="@+id/Izq"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="moverizq"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/Abajo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="moverabajo"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Der" />
+
+    <ImageButton
+        android:id="@+id/Der"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="moverder"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Izq" />
+
+    <ImageButton
+        android:id="@+id/Giro"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="giropieza"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Abajo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="73dp"
+        android:layout_marginEnd="30dp"
+        android:text="puntuacion:"
+        app:layout_constraintEnd_toStartOf="@+id/puntos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/puntos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="74dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/proximapieza"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
