@@ -14,7 +14,8 @@
         android:layout_marginBottom="78dp"
         app:layout_constraintBottom_toTopOf="@+id/Izq"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:color/background_dark" />
+        app:srcCompat="@android:color/background_dark"
+        tools:srcCompat="@drawable/fondoprueba" />
 
     <ImageView
         android:id="@+id/proximapieza"
@@ -24,7 +25,8 @@
         android:layout_marginBottom="35dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@color/colorAccent" />
+        app:srcCompat="@color/colorAccent"
+        tools:srcCompat="@drawable/cuadraditotetris" />
 
     <ImageButton
         android:id="@+id/Izq"
@@ -33,7 +35,9 @@
         android:layout_marginStart="30dp"
         android:layout_marginBottom="20dp"
         android:onClick="moverizq"
-        android:text="Button"
+        android:src="@drawable/izq"
+        android:scaleType="fitXY"
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -44,7 +48,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginBottom="20dp"
         android:onClick="moverabajo"
-        android:text="Button"
+        android:src="@drawable/arriba"
+        android:scaleType="fitXY"
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/Der" />
 
@@ -55,7 +61,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginBottom="20dp"
         android:onClick="moverder"
-        android:text="Button"
+        android:scaleType="fitXY"
+        android:src="@drawable/der"
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/Izq" />
 
@@ -66,7 +74,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginBottom="20dp"
         android:onClick="giropieza"
-        android:text="Button"
+        android:src="@drawable/giro"
+        android:scaleType="fitXY"
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/Abajo" />
 

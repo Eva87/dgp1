@@ -12,8 +12,10 @@
         android:layout_height="198dp"
         android:layout_marginStart="102dp"
         android:layout_marginTop="266dp"
+        android:background="#00FFFFFF"
         android:onClick="iniciarJuego"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorPrimary" />
+        app:srcCompat="@color/colorPrimary"
+        tools:srcCompat="@drawable/play" />
 </androidx.constraintlayout.widget.ConstraintLayout>

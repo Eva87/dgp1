@@ -59,7 +59,7 @@ public class PantallaJuego extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this, "pulsa nuevamente para salir", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Pulsa nuevamente para salir", Toast.LENGTH_SHORT).show();
         }
         tiempoesperavolver =System.currentTimeMillis();
     }

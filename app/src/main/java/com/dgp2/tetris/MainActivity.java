@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
         initViews();
     }
 
-
-
     public void iniciarJuego(View view){
         intent = new Intent(MainActivity.this, PantallaJuego.class);
         startActivity(intent);
@@ -38,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this, "pulsa nuevamente para salir", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Pulsa nuevamente para salir", Toast.LENGTH_SHORT).show();
         }
         tiempoesperavolver =System.currentTimeMillis();
     }
