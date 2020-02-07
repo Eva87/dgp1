@@ -2,6 +2,7 @@ package com.dgp2.tetris;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,8 +18,11 @@ import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.view.GestureDetectorCompat;
 
@@ -32,7 +36,6 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     final int AnchuraPantalla = 400;
     final Handler operaciones = new Handler();
     final Forma[] formas = new Forma[11];
-    final int PAUSAR = 0;
     final int IR_DERECHA = 1;
     final int IR_ABAJO = 2;
     final int IR_IZQUIERDA = 3;
@@ -41,9 +44,12 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     String dificultad, rapidez;
     int puntuacion;
     boolean juegoEnMarcha, juegoEnPausa, estadoVelocidadRapidez, estadoActual;
+    private long TiempoDeEspera;
 
     final int dx[] = {-1, 0, 1, 0};
     final int dy[] = {0, 1, 0, -1};
+
+    ImageView vistaPiezaProxima;
 
     private GestureDetectorCompat detectorDeGestos;
 
@@ -62,6 +68,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_juego);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        vistaPiezaProxima=  findViewById(R.id.verPieza);
 
         dificultad = prefs.getString("difficulty_preference", "Normal");
         numeroFilas = Integer.parseInt(prefs.getString("num_rows_preference", "20")) + 6;
@@ -721,6 +729,18 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     public boolean onTouchEvent(MotionEvent event) {
         detectorDeGestos.onTouchEvent(event);
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (TiempoDeEspera + 1500 > System.currentTimeMillis()) {
+            Intent intent = new Intent(PantallaJuego.this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Pulsa nuevamente para acabar", Toast.LENGTH_SHORT).show();
+        }
+
+        TiempoDeEspera = System.currentTimeMillis();
     }
 
     public double getAngle(float x1, float y1, float x2, float y2) {

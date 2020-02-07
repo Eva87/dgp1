@@ -68,5 +68,13 @@
         android:textIsSelectable="false"
         android:textSize="30sp" />
 
+    <ImageView
+        android:id="@+id/verPieza"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/der"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
