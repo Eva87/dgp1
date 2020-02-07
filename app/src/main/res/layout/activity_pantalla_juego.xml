@@ -4,97 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ff72abff"
+    android:maxHeight="600dp"
     tools:context=".PantallaJuego">
 
-    <include
-        layout="@layout/tablero"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:layout_marginTop="97dp"
+
+    <LinearLayout
+        android:id="@+id/game_board"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/game_score_textview"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/proximapieza" />
+        app:layout_constraintTop_toBottomOf="@+id/game_over_textview2">
 
-    <ImageView
-        android:id="@+id/proximapieza"
-        android:layout_width="105dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="263dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorAccent"
-        tools:srcCompat="@drawable/cuadraditotetris" />
-
-    <ImageButton
-        android:id="@+id/Izq"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="moverizq"
-        android:src="@drawable/izq"
-        android:scaleType="fitXY"
-        android:background="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/Abajo"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="moverabajo"
-        android:src="@drawable/arriba"
-        android:scaleType="fitXY"
-        android:background="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/Der" />
-
-    <ImageButton
-        android:id="@+id/Der"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="moverder"
-        android:scaleType="fitXY"
-        android:src="@drawable/der"
-        android:background="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/Izq" />
-
-    <ImageButton
-        android:id="@+id/Giro"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="giropieza"
-        android:src="@drawable/giro"
-        android:scaleType="fitXY"
-        android:background="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/Abajo" />
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/game_score_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="73dp"
-        android:layout_marginEnd="30dp"
-        android:text="puntuacion:"
-        app:layout_constraintEnd_toStartOf="@+id/puntos"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:clickable="false"
+        android:longClickable="false"
+        android:text="PUNTUACION"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="false" />
 
     <TextView
-        android:id="@+id/puntos"
+        android:id="@+id/game_over_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="74dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/proximapieza"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerInParent="true"
+        android:background="#ff2b2b2b"
+        android:clickable="false"
+        android:longClickable="false"
+        android:text="GAME OVER"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffffff"
+        android:textIsSelectable="false"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/game_over_textview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game_over_textview"
+        android:layout_centerInParent="true"
+        android:autoText="true"
+        android:background="#ff2b2b2b"
+        android:clickable="false"
+        android:longClickable="false"
+        android:text="PULSA PARA VOLVER A JUGAR"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffffff"
+        android:textIsSelectable="false"
+        android:textSize="30sp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
