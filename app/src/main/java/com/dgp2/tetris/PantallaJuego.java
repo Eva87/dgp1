@@ -366,16 +366,16 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         // poner la nueva forma arriba del tablero si es posible
         for (int compensar = 0; compensar <= 3; ++compensar) {
             int i, m, j, n;
-            boolean ok = true;
+            boolean si = true;
             for (m = formaActual.x + compensar, i = 1; i <= 4; i++, m++) {
                 for (n = formaActual.y, j = 1; j <= 4; j++, n++) {
                     matrizDeJuego[m][n].setState(matrizDeJuego[m][n].getState() + formaActual.mat[i][j].getState());
                     if (matrizDeJuego[m][n].getState() > 1) {
-                        ok = false;
+                        si = false;
                     }
                 }
             }
-            if (ok) {
+            if (si) {
                 for (i = 1, m = formaActual.x + compensar; i <= 4; i++, m++) {
                     for (j = 1, n = formaActual.y; j <= 4; j++, n++) {
                         if (formaActual.mat[i][j].getState() == 1) {
@@ -403,13 +403,13 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         int k = 0;
         boolean found = false;
         for (int i = numeroFilas - 4; i >= 3; --i) {
-            boolean ok = true;
+            boolean si = true;
             for (int j = 3; j < numeroColumnas - 3; j++) {
                 if (matrizDeJuego[i][j].getState() == 0) {
-                    ok = false;
+                    si = false;
                 }
             }
-            if (ok) {
+            if (si) {
                 ++k;
                 found = true;
             } else {
