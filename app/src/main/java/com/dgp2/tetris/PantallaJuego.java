@@ -30,10 +30,11 @@ import java.util.Random;
 
 public class PantallaJuego extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 /*CrearLaForma  esta tiene que verse antes de fijarse*/
-    int numeroFilas = 20;
-    int numeroColumnas = 14;
+    private GestureDetectorCompat detectorDeGestos;
     final int AlturaPantalla = 800;
     final int AnchuraPantalla = 400;
+    int numeroFilas = 20;
+    int numeroColumnas = 14;
     final Handler operaciones = new Handler();
     final Forma[] formas = new Forma[11];
     final int IR_DERECHA = 1;
@@ -41,7 +42,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     final int IR_IZQUIERDA = 3;
     int RAPIDEZNORMAL = 500;
     int RAPIDEZDEPRISA = 50;
-    String dificultad, rapidez;
+    String rapidez;
     int puntuacion;
     boolean juegoEnMarcha, juegoEnPausa, estadoVelocidadRapidez, estadoActual;
     private long TiempoDeEspera;
@@ -49,38 +50,34 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     final int dx[] = {-1, 0, 1, 0};
     final int dy[] = {0, 1, 0, -1};
 
-    ImageView vistaPiezaProxima;
-
-    private GestureDetectorCompat detectorDeGestos;
+    LinearLayout vistaPiezaProxima;
 
     Random random = new Random();
 
     BoardCell[][] matrizDeJuego;
     Bitmap bitmap;
     Canvas canvas;
-    Paint paint;
+
+    Bitmap bitmapnuevaforma;
+    Canvas canvasnuevaforma;
+
+    Paint paint,paintnueva;
     LinearLayout linearLayout;
 
-    Forma formaActual;
+    Forma formaActual, proximaForma;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_juego);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
+
         vistaPiezaProxima=  findViewById(R.id.verPieza);
 
-        dificultad = prefs.getString("difficulty_preference", "Normal");
         numeroFilas = Integer.parseInt(prefs.getString("num_rows_preference", "20")) + 6;
         numeroColumnas = Integer.parseInt(prefs.getString("num_columns_preference", "10")) + 6;
         rapidez = prefs.getString("speed_preference", "Normal");
         switch (rapidez) {
-            case "Despacio": {
-                RAPIDEZNORMAL = 1000;
-                RAPIDEZDEPRISA = 100;
-                break;
-            }
             case "Normal": {
                 RAPIDEZNORMAL = 500;
                 RAPIDEZDEPRISA = 50;
@@ -100,7 +97,13 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
         bitmap = Bitmap.createBitmap(AnchuraPantalla, AlturaPantalla, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
+
+        bitmapnuevaforma = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888);
+        canvasnuevaforma = new Canvas(bitmapnuevaforma);
+
+
         paint = new Paint();
+        paintnueva=new Paint();
         linearLayout = (LinearLayout) findViewById(R.id.game_board);
         puntuacion = 0;
         estadoActual = false;
@@ -350,12 +353,17 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     private boolean CrearLaForma() {
         // generar la forma actual y ponerla en la matriz
+        proximaForma = formas[random.nextInt(7)];
+        formaActual=proximaForma;
+        proximaForma = formas[random.nextInt(7)];
 
-        if (dificultad.compareTo("Normal") == 0) {
-            formaActual = formas[random.nextInt(7)];
-        } else {
-            formaActual = formas[random.nextInt(formas.length)];
-        }
+
+
+
+
+
+
+
         // generar aleatoriamente el numero de rotaciones
         int number_of_rotations = random.nextInt(4);
         for (int i = 1; i <= number_of_rotations; i++) {
@@ -429,19 +437,42 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
         }
         // Actualizar la puntuacion
-        puntuacion += (k * (k + 30) );
+        if(k>0){
+            puntuacion+=30;
+        }
+        //puntuacion += (k * (k + 29) );
         FijarMatrizJuego();
         return found;
     }
 
     void PintarMatriz() {
 
+        // pintar el fondo del tablero pequeño
+        paintnueva.setColor(Color.rgb(34,31,84));
+        canvas.drawRect(0, 0, 4, 4, paintnueva);
+
+        // Pintar la cuadricula del tablero pequeño
+        paintnueva.setColor(Color.rgb(244,242,205));
+        for (int i = 0; i < 4; i++) {
+            canvas.drawLine(0, 0, 4,4, paintnueva);
+        }
+        for (int i = 0; i < 4; i++) {
+            canvas.drawLine(4, 0,0, 4, paintnueva);
+        }
+        for (int i = 0; i < 4; i++) {
+            for (int j =0; j < 4; j++) {
+                if (matrizDeJuego[i][j].getState() == 1) {
+                    paintnueva.setColor(matrizDeJuego[i][j].getColor());
+                    canvasnuevaforma.drawRect(4 ,4,4,4, paintnueva);
+                }
+            }
+        }
         // pintar el fondo del tablero
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.rgb(34,31,84));
         canvas.drawRect(0, 0, AnchuraPantalla, AlturaPantalla, paint);
 
         // Pintar la cuadricula del tablero
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.rgb(244,242,205));
         for (int i = 0; i <= (numeroFilas - 6); i++) {
             canvas.drawLine(0, i * (AlturaPantalla / (numeroFilas - 6)), AnchuraPantalla,
                     i * (AlturaPantalla / (numeroFilas - 6)), paint);
@@ -499,6 +530,17 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             textView.setVisibility(View.VISIBLE);
             TextView textView2 = (TextView) findViewById(R.id.game_over_textview2);
             textView2.setVisibility(View.VISIBLE);
+
+            Intent intent = new Intent(PantallaJuego.this, PantallaJuego.class); Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    // despues de 10 segundos
+                    Toast.makeText(getBaseContext(), "Comienza la nueva partida", Toast.LENGTH_SHORT).show();
+                }
+            }, 100000);
+            startActivity(intent);
+            finish();
+
         } else if (juegoEnPausa) {
             paint.setColor(Color.WHITE);
             paint.setTextAlign(Paint.Align.CENTER);
@@ -506,12 +548,13 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             canvas.drawText("GAME PAUSED", (float) (AnchuraPantalla / 2.0), (float) (AlturaPantalla / 2.0), paint);
         }
 
+        vistaPiezaProxima.setBackgroundDrawable(new BitmapDrawable(bitmapnuevaforma));
         // Mostrar el actual dibujo
         linearLayout.setBackgroundDrawable(new BitmapDrawable(bitmap));
 
         // Actualizar la puntuacion del textview
         TextView textView = (TextView) findViewById(R.id.game_score_textview);
-        textView.setText("Score: " + puntuacion);
+        textView.setText("Puntuación: " + puntuacion);
     }
 
     private Runnable runnable = new Runnable() {
