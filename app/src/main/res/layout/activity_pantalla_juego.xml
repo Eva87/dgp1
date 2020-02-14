@@ -4,78 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff72abff"
-    android:maxHeight="600dp"
+    android:background="#000000"
     tools:context=".PantallaJuego">
 
+    <ImageView
+        android:id="@+id/verPieza"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/figurai"
+        android:orientation="vertical"
+        android:scaleType="fitXY"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/game_board"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/game_score_textview"
+        android:layout_above="@+id/puntos"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="60dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_over_textview2">
+        app:layout_constraintTop_toBottomOf="@+id/pierde">
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/game_score_textview"
+        android:id="@+id/puntos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:clickable="false"
-        android:longClickable="false"
         android:text="PUNTUACION"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="false" />
+        android:textColor="#ffffff"
+        android:textSize="30sp" />
 
     <TextView
-        android:id="@+id/game_over_textview"
+        android:id="@+id/pierde"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="#ff2b2b2b"
-        android:clickable="false"
-        android:longClickable="false"
-        android:text="GAME OVER"
+        android:text="HAS PERDIDO"
         android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffffff"
-        android:textIsSelectable="false"
         android:textSize="30sp" />
 
     <TextView
-        android:id="@+id/game_over_textview2"
+        android:id="@+id/volverajugar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/game_over_textview"
+        android:layout_below="@+id/pierde"
         android:layout_centerInParent="true"
-        android:autoText="true"
         android:background="#ff2b2b2b"
-        android:clickable="false"
-        android:longClickable="false"
-        android:text="PULSA PARA VOLVER A JUGAR"
+        android:text="TOCA LA PANTALLA PARA VOLVER ATRAS"
         android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffffff"
-        android:textIsSelectable="false"
         android:textSize="30sp" />
 
-    <LinearLayout
-        android:id="@+id/verPieza"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:orientation="vertical"
-        android:visibility="visible"
+    <ImageButton
+        android:id="@+id/botonizquierda"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/izquierda"
+        android:scaleType="fitXY"
+        android:text="Button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+
+    <ImageButton
+        android:id="@+id/botonderecha"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="91dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/play"
+        android:scaleType="fitXY"
+        android:text="Button"
+        app:layout_constraintStart_toEndOf="@+id/botonizquierda"
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+
+    <ImageButton
+        android:id="@+id/botonpausa"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="31dp"
+        android:src="@drawable/parar"
+        android:scaleType="fitXY"
+        android:backgroundTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

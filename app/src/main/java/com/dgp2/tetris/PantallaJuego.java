@@ -1,24 +1,26 @@
 package com.dgp2.tetris;
 
 import android.app.Activity;
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,33 +30,54 @@ import androidx.core.view.GestureDetectorCompat;
 
 import java.util.Random;
 
+import static android.util.Half.EPSILON;
+
 public class PantallaJuego extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
-/*CrearLaForma  esta tiene que verse antes de fijarse*/
+
     private GestureDetectorCompat detectorDeGestos;
     final int AlturaPantalla = 800;
     final int AnchuraPantalla = 400;
-    int numeroFilas = 20;
-    int numeroColumnas = 14;
+    int numeroFilas ;
+    int numeroColumnas ;
+    int numfilasmodifpreferences=20; /*si 40 tarda 28 segundos*/
+    int numcolumnasasmodifpreferences=10; /*40*20*/
+    /*Para la siguiente version que vengan desde las opciones de configuracion
+    * el numero de las filas y de las columnas*/
     final Handler operaciones = new Handler();
-    final Forma[] formas = new Forma[11];
+    final Forma[] formas = new Forma[7];
     final int IR_DERECHA = 1;
     final int IR_ABAJO = 2;
     final int IR_IZQUIERDA = 3;
+    public static final int CONTADORDEMOVIMIENTOS=0;
+    private static final float NS2S = 1.0f / 1000000000.0f;
+    private final float[] deltaRotationVector = new float[4];
+    private float timestamp;
+
     int RAPIDEZNORMAL = 500;
     int RAPIDEZDEPRISA = 50;
+    boolean inicio;
     String rapidez;
     int puntuacion;
-    boolean juegoEnMarcha, juegoEnPausa, estadoVelocidadRapidez, estadoActual;
+    boolean juegoEnMarcha, juegoEnPausa, estadoActual;
     private long TiempoDeEspera;
+    ImageButton botonizquierda, botonderecha,botonpausa;
+
+    /*el que cada 30 segundos salga una ficha nueva solo seria posible si el numero de filas fuera mas grande
+    * ya que tarda 8 segundos en llegar abajo*/
 
     final int dx[] = {-1, 0, 1, 0};
     final int dy[] = {0, 1, 0, -1};
+    SensorManager sensorManager;
+    Sensor sensor;
+    SensorEventListener sensorproximidad;
 
-    LinearLayout vistaPiezaProxima;
+    ImageView vistaPiezaProxima;
 
     Random random = new Random();
 
-    BoardCell[][] matrizDeJuego;
+    Vibrator vibrador;
+
+    PizarradeCeldas[][] matrizDeJuego;
     Bitmap bitmap;
     Canvas canvas;
 
@@ -72,10 +95,12 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         setContentView(R.layout.activity_pantalla_juego);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        vibrador = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        inicio=false;
+        estadoActual=false;
         vistaPiezaProxima=  findViewById(R.id.verPieza);
-
-        numeroFilas = Integer.parseInt(prefs.getString("num_rows_preference", "20")) + 6;
-        numeroColumnas = Integer.parseInt(prefs.getString("num_columns_preference", "10")) + 6;
+        numeroFilas=numfilasmodifpreferences+6;
+        numeroColumnas=numcolumnasasmodifpreferences+6;
         rapidez = prefs.getString("speed_preference", "Normal");
         switch (rapidez) {
             case "Normal": {
@@ -83,37 +108,260 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 RAPIDEZDEPRISA = 50;
                 break;
             }
-            case "Rapido": {
-                RAPIDEZNORMAL = 250;
-                RAPIDEZDEPRISA = 25;
-                break;
-            }
         }
 
-        TextView textView = (TextView) findViewById(R.id.game_over_textview);
+        TextView textView = findViewById(R.id.pierde);
         textView.setVisibility(View.INVISIBLE);
-        TextView textView2 = (TextView) findViewById(R.id.game_over_textview2);
+        TextView textView2 = findViewById(R.id.volverajugar);
         textView2.setVisibility(View.INVISIBLE);
-
+        botonizquierda=findViewById(R.id.botonizquierda);
+        botonderecha=findViewById(R.id.botonderecha);
+        botonpausa=findViewById(R.id.botonpausa);
         bitmap = Bitmap.createBitmap(AnchuraPantalla, AlturaPantalla, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
 
         bitmapnuevaforma = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888);
         canvasnuevaforma = new Canvas(bitmapnuevaforma);
 
-
         paint = new Paint();
         paintnueva=new Paint();
-        linearLayout = (LinearLayout) findViewById(R.id.game_board);
+        linearLayout = findViewById(R.id.game_board);
         puntuacion = 0;
         estadoActual = false;
 
         detectorDeGestos = new GestureDetectorCompat(this, this);
         detectorDeGestos.setOnDoubleTapListener(this);
 
-        InicializadorDeFormas();
+        int[][] tipoforma = new int[5][5];
+        int ejex=1, ejey=1;
+        while (ejex<=5){
+            while (ejey<=5){
+                tipoforma[ejex-1][ejey-1] = 0;
+                ejey++;
+            }
+            ejex++;
+        }
 
-        InicializadorDeJuego();
+        /*      +
+         *       +
+         *       ++
+         * */
+        tipoforma[1][2] = 1;
+        tipoforma[1][3] = 1;
+        tipoforma[2][3] = 1;
+        tipoforma[3][3] = 1;
+        formas[0] = new Forma(tipoforma, Color.rgb(255, 51, 249), PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[1][2] = 0;
+        tipoforma[1][3] = 0;
+        tipoforma[2][3] = 0;
+        tipoforma[3][3] = 0;
+
+
+        /*      ++
+         *       ++
+         * */
+        tipoforma[2][1] = 1;
+        tipoforma[2][2] = 1;
+        tipoforma[3][2] = 1;
+        tipoforma[3][3] = 1;
+        formas[1] = new Forma(tipoforma, Color.rgb(248, 138, 17), PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[2][1] = 0;
+        tipoforma[2][2] = 0;
+        tipoforma[3][2] = 0;
+        tipoforma[3][3] = 0;
+
+
+        /*       +
+         *       +
+         *       +
+         *       +
+         * */
+        tipoforma[1][2] = 1;
+        tipoforma[2][2] = 1;
+        tipoforma[3][2] = 1;
+        tipoforma[4][2] = 1;
+        formas[2] = new Forma(tipoforma, Color.RED, PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[1][2] = 0;
+        tipoforma[2][2] = 0;
+        tipoforma[3][2] = 0;
+        tipoforma[4][2] = 0;
+
+
+        /*       ++
+         *       ++
+         * */
+        tipoforma[2][2] = 1;
+        tipoforma[2][3] = 1;
+        tipoforma[3][2] = 1;
+        tipoforma[3][3] = 1;
+        formas[3] = new Forma(tipoforma, Color.BLUE, PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[2][2] = 0;
+        tipoforma[2][3] = 0;
+        tipoforma[3][2] = 0;
+        tipoforma[3][3] = 0;
+
+
+        /*      +++
+         *       +
+         * */
+        tipoforma[1][2] = 1;
+        tipoforma[2][2] = 1;
+        tipoforma[2][3] = 1;
+        tipoforma[3][2] = 1;
+        formas[4] = new Forma(tipoforma, Color.rgb(108, 230, 21), PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[1][2] = 0;
+        tipoforma[2][2] = 0;
+        tipoforma[2][3] = 0;
+        tipoforma[3][2] = 0;
+
+
+        /*        ++
+         *       ++
+         * */
+        tipoforma[1][2] = 1;
+        tipoforma[2][2] = 1;
+        tipoforma[2][3] = 1;
+        tipoforma[3][3] = 1;
+        formas[5] = new Forma(tipoforma, Color.CYAN, PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[1][2] = 0;
+        tipoforma[2][2] = 0;
+        tipoforma[2][3] = 0;
+        tipoforma[3][3] = 0;
+
+
+        /*       +
+         *       +
+         *      ++
+         * */
+        tipoforma[1][3] = 1;
+        tipoforma[2][3] = 1;
+        tipoforma[3][2] = 1;
+        tipoforma[3][3] = 1;
+        formas[6] = new Forma(tipoforma, Color.YELLOW, PizarradeCeldas.BEHAVIOR_IS_FALLING);
+        tipoforma[1][3] = 0;
+        tipoforma[2][3] = 0;
+        tipoforma[3][2] = 0;
+        tipoforma[3][3] = 0;
+
+
+
+        // Crear la pizarra del juego
+        matrizDeJuego = new PizarradeCeldas[numeroFilas][];
+        for (int i = 0; i < numeroFilas; i++) {
+            matrizDeJuego[i] = new PizarradeCeldas[numeroColumnas];
+            for (int j = 0; j < numeroColumnas; j++) {
+                matrizDeJuego[i][j] = new PizarradeCeldas();
+            }
+        }
+
+        for (int j = 0; j < numeroColumnas; j++) {
+            for (int i = 0; i <= 2; i++) {
+                matrizDeJuego[i][j] = new PizarradeCeldas(1, Color.rgb(244,242,205));
+            }
+            for (int i = numeroFilas - 3; i < numeroFilas; i++) {
+                matrizDeJuego[i][j] = new PizarradeCeldas(1, Color.rgb(244,242,205));
+            }
+        }
+
+        for (int i = 0; i < numeroFilas; i++) {
+            for (int j = 0; j <= 2; j++) {
+                matrizDeJuego[i][j] = new PizarradeCeldas(1, Color.rgb(244,242,205));
+            }
+            for (int j = numeroColumnas - 3; j < numeroColumnas; j++) {
+                matrizDeJuego[i][j] = new PizarradeCeldas(1, Color.rgb(244,242,205));
+            }
+        }
+
+        for (int j = 3; j < numeroColumnas - 3; j++) {
+            matrizDeJuego[numeroFilas - 4][j] = new PizarradeCeldas(matrizDeJuego[numeroFilas - 4][j].getEstado(), matrizDeJuego[numeroFilas - 4][j].getColor(), PizarradeCeldas.BEHAVIOR_IS_FIXED);
+        }
+
+        // Crear el bloque de tetris inicial
+        estadoActual = CrearLaForma();
+
+        // Empezar el juego
+        juegoEnMarcha = true;
+        juegoEnPausa = false;
+
+        // Pintar la matrix inicial
+        PintarMatriz();
+
+        //Cambiar el estado de la velocidad
+        operaciones.removeCallbacks(runnable);
+        operaciones.postDelayed(runnable, RAPIDEZNORMAL);
+
+
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
+        if(sensor==null){
+            //finish();
+        }
+        sensorproximidad=new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                if(sensorEvent.values[0]<sensor.getMaximumRange()){
+                    juegoEnPausa = true;
+                    PintarMatriz();
+                }else{
+                    juegoEnPausa = false;
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        };
+
+
+        botonderecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(estadoActual){
+                    MoverForma(IR_DERECHA, formaActual);
+                    PintarMatriz();
+
+                }
+
+            }
+        });
+
+        botonizquierda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(estadoActual){
+                    MoverForma(IR_IZQUIERDA, formaActual);
+                    PintarMatriz();
+
+                }
+
+            }
+        });
+        botonpausa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (juegoEnPausa)
+                    juegoEnPausa = false;
+                else {
+                    juegoEnPausa = true;
+                    PintarMatriz();
+                }
+
+            }
+        });
+
+        start();
+        }
+
+    public void start(){
+        sensorManager.registerListener(sensorproximidad,sensor,2000*1000);
+        juegoEnPausa = true;
+        PintarMatriz();
     }
 
     @Override
@@ -125,114 +373,36 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         }
     }
 
-    private void InicializadorDeFormas() {
-        int[][] a = new int[5][5];
-
-        for (int i = 1; i <= 5; i++) {
-            for (int j = 1; j <= 5; j++) {
-                a[i-1][j-1] = 0;
-            }
-        }
-
-        /*      +
-        *       +
-        *       ++
-        * */
-        a[1][2] = a[1][3] = a[2][3] = a[3][3] = 1;
-        formas[0] = new Forma(a, Color.rgb(255, 51, 249), BoardCell.BEHAVIOR_IS_FALLING);
-        a[1][2] = a[1][3] = a[2][3] = a[3][3] = 0;
-
-
-        /*      ++
-         *       ++
-         * */
-        a[2][1] = a[2][2] = a[3][2] = a[3][3] = 1;
-        formas[1] = new Forma(a, Color.rgb(248, 138, 17), BoardCell.BEHAVIOR_IS_FALLING);
-        a[2][1] = a[2][2] = a[3][2] = a[3][3] = 0;
-
-
-        /*       +
-         *       +
-         *       +
-         *       +
-         * */
-        a[1][2] = a[2][2] = a[3][2] = a[4][2] = 1;
-        formas[2] = new Forma(a, Color.RED, BoardCell.BEHAVIOR_IS_FALLING);
-        a[1][2] = a[2][2] = a[3][2] = a[4][2] = 0;
-
-
-        /*       ++
-         *       ++
-         * */
-        a[2][2] = a[2][3] = a[3][2] = a[3][3] = 1;
-        formas[3] = new Forma(a, Color.BLUE, BoardCell.BEHAVIOR_IS_FALLING, false);
-        a[2][2] = a[2][3] = a[3][2] = a[3][3] = 0;
-
-
-        /*      +++
-         *       +
-         * */
-        a[1][2] = a[2][2] = a[2][3] = a[3][2] = 1;
-        formas[4] = new Forma(a, Color.rgb(108, 230, 21), BoardCell.BEHAVIOR_IS_FALLING);
-        a[1][2] = a[2][2] = a[2][3] = a[3][2] = 0;
-
-
-        /*        ++
-         *       ++
-         * */
-        a[1][2] = a[2][2] = a[2][3] = a[3][3] = 1;
-        formas[5] = new Forma(a, Color.CYAN, BoardCell.BEHAVIOR_IS_FALLING);
-        a[1][2] = a[2][2] = a[2][3] = a[3][3] = 0;
-
-
-        /*       +
-         *       +
-         *      ++
-         * */
-        a[1][3] = a[2][3] = a[3][2] = a[3][3] = 1;
-        formas[6] = new Forma(a, Color.YELLOW, BoardCell.BEHAVIOR_IS_FALLING);
-        a[1][3] = a[2][3] = a[3][2] = a[3][3] = 0;
-
-    }
-
-    private void copiarMatriz(BoardCell[][] A, BoardCell[][] B) {
-        for (int i = 1; i <= numeroFilas; i++) {
-            for (int j = 1; j <= numeroColumnas; j++) {
-                B[i-1][j-1] = new BoardCell(A[i-1][j-1].getState(), A[i-1][j-1].getColor(), A[i-1][j-1].getBehavior());
-            }
-        }
-    }
-
     private void FijarMatrizJuego() {
-        for (int i = 3; i < numeroFilas - 3; i++) {
-            for (int j = 3; j < numeroColumnas - 3; j++) {
-                if (matrizDeJuego[i][j].getState() == 0) {
-                    matrizDeJuego[i][j].setColor(Color.BLACK);
-                    matrizDeJuego[i][j].setBehavior(BoardCell.BEHAVIOR_NOTHING);
+        for (int ejex = 3; ejex < numeroFilas - 3; ejex++) {
+            for (int ejey = 3; ejey < numeroColumnas - 3; ejey++) {
+                if (matrizDeJuego[ejex][ejey].getEstado() == 0) {
+                    matrizDeJuego[ejex][ejey].setColor(Color.rgb(244,242,205));
+                    matrizDeJuego[ejex][ejey].setComportamiento(PizarradeCeldas.BEHAVIOR_NOTHING);
                     continue;
                 }
-                if (matrizDeJuego[i][j].getBehavior() == BoardCell.BEHAVIOR_IS_FIXED)
+                if (matrizDeJuego[ejex][ejey].getComportamiento() == PizarradeCeldas.BEHAVIOR_IS_FIXED)
                     continue;
-                if (matrizDeJuego[i][j].getBehavior() == BoardCell.BEHAVIOR_IS_FALLING) {
+                if (matrizDeJuego[ejex][ejey].getComportamiento() == PizarradeCeldas.BEHAVIOR_IS_FALLING) {
                     int x, y, m, n;
                     for (x = 1, m = formaActual.x; x <= 4; x++, m++) {
                         for (y = 1, n = formaActual.y; y <= 4; y++, n++) {
-                            if (m == i && n == j) {
-                                if (formaActual.mat[x][y].getState() == 0) {
-                                    matrizDeJuego[i][j] = new BoardCell();
+                            if (m == ejex && n == ejey) {
+                                if (formaActual.mat[x][y].getEstado() == 0) {
+                                    matrizDeJuego[ejex][ejey] = new PizarradeCeldas();
                                 }
                             }
                         }
                     }
                     continue;
                 }
-                if (matrizDeJuego[i][j].getBehavior() == BoardCell.BEHAVIOR_NOTHING) {
+                if (matrizDeJuego[ejex][ejey].getComportamiento() == PizarradeCeldas.BEHAVIOR_NOTHING) {
                     int x, y, m, n;
                     for (x = 1, m = formaActual.x; x <= 4; x++, ++m) {
                         for (y = 1, n = formaActual.y; y <= 4; y++, n++) {
-                            if (m == i && n == j) {
-                                if (formaActual.mat[x][y].getState() == 1) {
-                                    matrizDeJuego[i][j] = formaActual.mat[x][y];
+                            if (m == ejex && n == ejey) {
+                                if (formaActual.mat[x][y].getEstado() == 1) {
+                                    matrizDeJuego[ejex][ejey] = formaActual.mat[x][y];
                                 }
                             }
                         }
@@ -244,16 +414,22 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     private boolean MoverForma(final int direccion, Forma formaAct) {
         // copiar la matriz de juego en un auxiliar
-        BoardCell[][] aux = new BoardCell[numeroFilas][];
+        PizarradeCeldas[][] aux = new PizarradeCeldas[numeroFilas][];
         for (int i = 0; i < numeroFilas; i++)
-            aux[i] = new BoardCell[numeroColumnas];
-        copiarMatriz(matrizDeJuego, aux);
+            aux[i] = new PizarradeCeldas[numeroColumnas];
+        PizarradeCeldas[][] AuxB=aux;
+        PizarradeCeldas[][] AuxA=matrizDeJuego;
+        for (int ejex = 1; ejex <= numeroFilas; ejex++) {
+            for (int ejey = 1; ejey <= numeroColumnas; ejey++) {
+                AuxB[ejex-1][ejey-1] = new PizarradeCeldas(AuxA[ejex-1][ejey-1].getEstado(), AuxA[ejex-1][ejey-1].getColor(), AuxA[ejex-1][ejey-1].getComportamiento());
+            }
+        }
         int i, m, j, n;
         // eliminar la forma de la tabla
         for (m = formaAct.x, i = 1; i <= 4; i++, m++) {
             for (n = formaAct.y, j = 1; j <= 4; j++, n++) {
-                if (formaAct.mat[i][j].getState() == 1) {
-                    matrizDeJuego[m][n] = new BoardCell();
+                if (formaAct.mat[i][j].getEstado() == 1) {
+                    matrizDeJuego[m][n] = new PizarradeCeldas();
                 }
             }
         }
@@ -261,13 +437,19 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         // intentar mover la forma a la direccion indicada
         for (m = formaAct.x + dx[direccion], i = 1; i <= 4; i++, m++) {
             for (n = formaAct.y + dy[direccion], j = 1; j <= 4; j++, n++) {
-                matrizDeJuego[m][n].setState(matrizDeJuego[m][n].getState() + formaAct.mat[i][j].getState());
-                if (formaAct.mat[i][j].getState() == 1) {
+                matrizDeJuego[m][n].setEstado(matrizDeJuego[m][n].getEstado() + formaAct.mat[i][j].getEstado());
+                if (formaAct.mat[i][j].getEstado() == 1) {
                     matrizDeJuego[m][n].setColor(formaAct.mat[i][j].getColor());
-                    matrizDeJuego[m][n].setBehavior(formaAct.mat[i][j].getBehavior());
+                    matrizDeJuego[m][n].setComportamiento(formaAct.mat[i][j].getComportamiento());
                 }
-                if (matrizDeJuego[m][n].getState() > 1) {
-                    copiarMatriz(aux, matrizDeJuego);
+                if (matrizDeJuego[m][n].getEstado() > 1) {
+                    AuxB=matrizDeJuego;
+                    AuxA=aux;
+                    for (int ejex = 1; ejex <= numeroFilas; ejex++) {
+                        for (int ejey = 1; ejey <= numeroColumnas; ejey++) {
+                            AuxB[ejex-1][ejey-1] = new PizarradeCeldas(AuxA[ejex-1][ejey-1].getEstado(), AuxA[ejex-1][ejey-1].getColor(), AuxA[ejex-1][ejey-1].getComportamiento());
+                        }
+                    }
                     FijarMatrizJuego();
                     return false;
                 }
@@ -279,69 +461,47 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         return true;
     }
 
-    private boolean RotarIzquierda(Forma formaAct) {
+    private boolean Rotar(Forma formaAct) {
         // copiar la matriz de juego en un auxiliar
-        BoardCell[][] aux = new BoardCell[numeroFilas][];
+        PizarradeCeldas[][] aux = new PizarradeCeldas[numeroFilas][];
         for (int i = 0; i < numeroFilas; i++)
-            aux[i] = new BoardCell[numeroColumnas];
-        copiarMatriz(matrizDeJuego, aux);
-        int i, m, j, n;
-        // eliminar la forma de la matriz de juego
-        for (m = formaAct.x, i = 1; i <= 4; i++, m++) {
-            for (n = formaAct.y, j = 1; j <= 4; j++, n++) {
-                if (formaAct.mat[i][j].getState() == 1) {
-                    matrizDeJuego[m][n] = new BoardCell();
-                }
-            }
-        }
-        // rotar la forma a la izquierda
-        formaAct.RotarALaIzquierda();
-        for (m = formaAct.x, i = 1; i <= 4; i++, m++) {
-            for (n = formaAct.y, j = 1; j <= 4; j++, n++) {
-                matrizDeJuego[m][n].setState(matrizDeJuego[m][n].getState() + formaAct.mat[i][j].getState());
-                if (formaAct.mat[i][j].getState() == 1) {
-                    matrizDeJuego[m][n].setColor(formaAct.mat[i][j].getColor());
-                    matrizDeJuego[m][n].setBehavior(formaAct.mat[i][j].getBehavior());
-                }
-                if (matrizDeJuego[m][n].getState() > 1) {
-                    copiarMatriz(aux, matrizDeJuego);
-                    formaAct.RotarALaDerecha();
-                    FijarMatrizJuego();
-                    return false;
-                }
-            }
-        }
-        FijarMatrizJuego();
-        return true;
-    }
+            aux[i] = new PizarradeCeldas[numeroColumnas];
 
-    private boolean RotarDerecha(Forma formaActua) {
-        // copiar la matriz de juego en un auxiliar
-        BoardCell[][] aux = new BoardCell[numeroFilas][];
-        for (int i = 0; i < numeroFilas; i++)
-            aux[i] = new BoardCell[numeroColumnas];
-        copiarMatriz(matrizDeJuego, aux);
+        PizarradeCeldas[][] AuxB=aux;
+        PizarradeCeldas[][] AuxA=matrizDeJuego;
+        for (int ejex = 1; ejex <= numeroFilas; ejex++) {
+            for (int ejey = 1; ejey <= numeroColumnas; ejey++) {
+                AuxB[ejex-1][ejey-1] = new PizarradeCeldas(AuxA[ejex-1][ejey-1].getEstado(), AuxA[ejex-1][ejey-1].getColor(), AuxA[ejex-1][ejey-1].getComportamiento());
+            }
+        }
         int i, m, j, n;
         // eliminar la forma de la matriz de juego
-        for (m = formaActua.x, i = 1; i <= 4; i++, m++) {
-            for (n = formaActua.y, j = 1; j <= 4; j++, n++) {
-                if (formaActua.mat[i][j].getState() == 1) {
-                    matrizDeJuego[m][n] = new BoardCell();
+        for (m = formaAct.x, i = 1; i <= 4; i++, m++) {
+            for (n = formaAct.y, j = 1; j <= 4; j++, n++) {
+                if (formaAct.mat[i][j].getEstado() == 1) {
+                    matrizDeJuego[m][n] = new PizarradeCeldas();
                 }
             }
         }
-        // rotar la forma a la derecha
-        formaActua.RotarALaDerecha();
-        for (m = formaActua.x, i = 1; i <= 4; i++, m++) {
-            for (n = formaActua.y, j = 1; j <= 4; j++, n++) {
-                matrizDeJuego[m][n].setState(matrizDeJuego[m][n].getState() + formaActua.mat[i][j].getState());
-                if (formaActua.mat[i][j].getState() == 1) {
-                    matrizDeJuego[m][n].setColor(formaActua.mat[i][j].getColor());
-                    matrizDeJuego[m][n].setBehavior(formaActua.mat[i][j].getBehavior());
+        // rotar la forma
+        formaAct.RotarLaPieza();
+        for (m = formaAct.x, i = 1; i <= 4; i++, m++) {
+            for (n = formaAct.y, j = 1; j <= 4; j++, n++) {
+                matrizDeJuego[m][n].setEstado(matrizDeJuego[m][n].getEstado() + formaAct.mat[i][j].getEstado());
+                if (formaAct.mat[i][j].getEstado() == 1) {
+                    matrizDeJuego[m][n].setColor(formaAct.mat[i][j].getColor());
+                    matrizDeJuego[m][n].setComportamiento(formaAct.mat[i][j].getComportamiento());
                 }
-                if (matrizDeJuego[m][n].getState() > 1) {
-                    copiarMatriz(aux, matrizDeJuego);
-                    formaActua.RotarALaIzquierda();
+                if (matrizDeJuego[m][n].getEstado() > 1) {
+
+                    AuxB=matrizDeJuego;
+                    AuxA=aux;
+                    for (int ejex = 1; ejex <= numeroFilas; ejex++) {
+                        for (int ejey = 1; ejey <= numeroColumnas; ejey++) {
+                            AuxB[ejex-1][ejey-1] = new PizarradeCeldas(AuxA[ejex-1][ejey-1].getEstado(), AuxA[ejex-1][ejey-1].getColor(), AuxA[ejex-1][ejey-1].getComportamiento());
+                        }
+                    }
+                    formaAct.RotarLaPieza();
                     FijarMatrizJuego();
                     return false;
                 }
@@ -353,22 +513,43 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     private boolean CrearLaForma() {
         // generar la forma actual y ponerla en la matriz
-        proximaForma = formas[random.nextInt(7)];
-        formaActual=proximaForma;
-        proximaForma = formas[random.nextInt(7)];
-
-
-
-
-
-
-
-
-        // generar aleatoriamente el numero de rotaciones
-        int number_of_rotations = random.nextInt(4);
-        for (int i = 1; i <= number_of_rotations; i++) {
-            formaActual.RotarALaDerecha();
+        if(inicio==false){
+            proximaForma = formas[random.nextInt(7)];
+            inicio=true;
         }
+        formaActual=proximaForma;
+        int alea=random.nextInt(7);
+        proximaForma = formas[alea];
+
+        switch (alea){
+            case 0:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figural));
+                break;
+            case 1:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figura2));
+                break;
+            case 2:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figurai));
+                break;
+            case 3:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figurao));
+                break;
+            case 4:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figurat));
+                break;
+            case 5:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figura5));
+                break;
+            case 6:
+                vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figuraj));
+                break;
+
+        }
+
+
+
+
+
         formaActual.x = 0;
         formaActual.y = 1 + (numeroColumnas - 6) / 2;
         // poner la nueva forma arriba del tablero si es posible
@@ -377,8 +558,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             boolean si = true;
             for (m = formaActual.x + compensar, i = 1; i <= 4; i++, m++) {
                 for (n = formaActual.y, j = 1; j <= 4; j++, n++) {
-                    matrizDeJuego[m][n].setState(matrizDeJuego[m][n].getState() + formaActual.mat[i][j].getState());
-                    if (matrizDeJuego[m][n].getState() > 1) {
+                    matrizDeJuego[m][n].setEstado(matrizDeJuego[m][n].getEstado() + formaActual.mat[i][j].getEstado());
+                    if (matrizDeJuego[m][n].getEstado() > 1) {
                         si = false;
                     }
                 }
@@ -386,9 +567,9 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             if (si) {
                 for (i = 1, m = formaActual.x + compensar; i <= 4; i++, m++) {
                     for (j = 1, n = formaActual.y; j <= 4; j++, n++) {
-                        if (formaActual.mat[i][j].getState() == 1) {
+                        if (formaActual.mat[i][j].getEstado() == 1) {
                             matrizDeJuego[m][n].setColor(formaActual.mat[i][j].getColor());
-                            matrizDeJuego[m][n].setBehavior(formaActual.mat[i][j].getBehavior());
+                            matrizDeJuego[m][n].setComportamiento(formaActual.mat[i][j].getComportamiento());
                         }
                     }
                 }
@@ -398,7 +579,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             } else {
                 for (m = formaActual.x + compensar, i = 1; i <= 4; i++, m++) {
                     for (n = formaActual.y, j = 1; j <= 4; j++, n++) {
-                        matrizDeJuego[m][n].setState(matrizDeJuego[m][n].getState() - formaActual.mat[i][j].getState());
+                        matrizDeJuego[m][n].setEstado(matrizDeJuego[m][n].getEstado() - formaActual.mat[i][j].getEstado());
                     }
                 }
             }
@@ -409,64 +590,45 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     private boolean Check() {
         int k = 0;
-        boolean found = false;
+        boolean encontrado = false;
         for (int i = numeroFilas - 4; i >= 3; --i) {
             boolean si = true;
             for (int j = 3; j < numeroColumnas - 3; j++) {
-                if (matrizDeJuego[i][j].getState() == 0) {
+                if (matrizDeJuego[i][j].getEstado() == 0) {
                     si = false;
                 }
             }
             if (si) {
                 ++k;
-                found = true;
+                encontrado = true;
             } else {
                 if (k == 0)
                     continue;
                 for (int j = 3; j < numeroColumnas - 3; j++) {
-                    int state = matrizDeJuego[i][j].getState();
+                    int estado = matrizDeJuego[i][j].getEstado();
                     int color = matrizDeJuego[i][j].getColor();
-                    int behavior = matrizDeJuego[i][j].getBehavior();
-                    matrizDeJuego[i + k][j] = new BoardCell(state, color, behavior);
+                    int comportamiento = matrizDeJuego[i][j].getComportamiento();
+                    matrizDeJuego[i + k][j] = new PizarradeCeldas(estado, color, comportamiento);
                 }
             }
         }
         for (int pas = 0; pas < k; ++pas) {
             for (int j = 3; j < numeroColumnas - 3; j++) {
-                matrizDeJuego[3 + pas][j] = new BoardCell();
+                matrizDeJuego[3 + pas][j] = new PizarradeCeldas();
             }
         }
         // Actualizar la puntuacion
         if(k>0){
             puntuacion+=30;
+            long patronvibracion[]={0,100,100,100,100};
+            vibrador.vibrate(patronvibracion,-1);
         }
-        //puntuacion += (k * (k + 29) );
         FijarMatrizJuego();
-        return found;
+        return encontrado;
     }
 
     void PintarMatriz() {
 
-        // pintar el fondo del tablero pequeño
-        paintnueva.setColor(Color.rgb(34,31,84));
-        canvas.drawRect(0, 0, 4, 4, paintnueva);
-
-        // Pintar la cuadricula del tablero pequeño
-        paintnueva.setColor(Color.rgb(244,242,205));
-        for (int i = 0; i < 4; i++) {
-            canvas.drawLine(0, 0, 4,4, paintnueva);
-        }
-        for (int i = 0; i < 4; i++) {
-            canvas.drawLine(4, 0,0, 4, paintnueva);
-        }
-        for (int i = 0; i < 4; i++) {
-            for (int j =0; j < 4; j++) {
-                if (matrizDeJuego[i][j].getState() == 1) {
-                    paintnueva.setColor(matrizDeJuego[i][j].getColor());
-                    canvasnuevaforma.drawRect(4 ,4,4,4, paintnueva);
-                }
-            }
-        }
         // pintar el fondo del tablero
         paint.setColor(Color.rgb(34,31,84));
         canvas.drawRect(0, 0, AnchuraPantalla, AlturaPantalla, paint);
@@ -485,7 +647,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         // Pintar los bloques de tetris
         for (int i = 3; i < numeroFilas - 3; i++) {
             for (int j = 3; j < numeroColumnas - 3; j++) {
-                if (matrizDeJuego[i][j].getState() == 1) {
+                if (matrizDeJuego[i][j].getEstado() == 1) {
                     paint.setColor(matrizDeJuego[i][j].getColor());
                     canvas.drawRect((j - 3) * (AnchuraPantalla / (numeroColumnas - 6)),
                             (i - 3) * (AlturaPantalla / (numeroFilas - 6)),
@@ -496,11 +658,11 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
         }
 
-        // Pintar los bloques de tetris
+        // Pintar los bordes de tetris
         for (int i = 3; i < numeroFilas - 3; i++) {
             for (int j = 3; j < numeroColumnas - 3; j++) {
-                if (matrizDeJuego[i][j].getState() == 1) {
-                    paint.setColor(Color.BLACK);
+                if (matrizDeJuego[i][j].getEstado() == 1) {
+                    paint.setColor(Color.rgb(244,242,205));
                     canvas.drawLine((j - 3) * (AnchuraPantalla / (numeroColumnas - 6)),
                             (i - 3) * (AlturaPantalla / (numeroFilas - 6)),
                             (j - 3) * (AnchuraPantalla / (numeroColumnas - 6)),
@@ -526,26 +688,48 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         }
 
         if (!juegoEnMarcha) {
-            TextView textView = (TextView) findViewById(R.id.game_over_textview);
+            TextView textView = findViewById(R.id.pierde);
             textView.setVisibility(View.VISIBLE);
-            TextView textView2 = (TextView) findViewById(R.id.game_over_textview2);
-            textView2.setVisibility(View.VISIBLE);
 
-            Intent intent = new Intent(PantallaJuego.this, PantallaJuego.class); Handler handler = new Handler();
+            Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    // despues de 10 segundos
-                    Toast.makeText(getBaseContext(), "Comienza la nueva partida", Toast.LENGTH_SHORT).show();
+                    // despues de 1.5 segundos
+
+                    TextView textView2 = findViewById(R.id.volverajugar);
+                    textView2.setVisibility(View.VISIBLE);
                 }
-            }, 100000);
-            startActivity(intent);
-            finish();
+            }, 1500);
+
+           /* Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    // despues de 2 segundos
+                    Toast.makeText(getBaseContext(), "Comienza la nueva partida", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PantallaJuego.this, PantallaJuego.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);*/
+
+           /* handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    // despues de 5 segundos
+                    Toast.makeText(getBaseContext(), "Vuelve a la pantalla principal ", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PantallaJuego.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 5000);*/
+
+
 
         } else if (juegoEnPausa) {
-            paint.setColor(Color.WHITE);
+            paint.setTextSize(40);
             paint.setTextAlign(Paint.Align.CENTER);
-            paint.setTextSize(60);
-            canvas.drawText("GAME PAUSED", (float) (AnchuraPantalla / 2.0), (float) (AlturaPantalla / 2.0), paint);
+            paint.setColor(Color.YELLOW);
+            canvas.drawText("JUEGO PAUSADO", (float) (AnchuraPantalla / 2), (float) (AlturaPantalla / 2), paint);
         }
 
         vistaPiezaProxima.setBackgroundDrawable(new BitmapDrawable(bitmapnuevaforma));
@@ -553,8 +737,48 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         linearLayout.setBackgroundDrawable(new BitmapDrawable(bitmap));
 
         // Actualizar la puntuacion del textview
-        TextView textView = (TextView) findViewById(R.id.game_score_textview);
+        TextView textView = findViewById(R.id.puntos);
         textView.setText("Puntuación: " + puntuacion);
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        // This time step's delta rotation to be multiplied by the current rotation
+        // after computing it from the gyro sample data.
+        if (timestamp != 0) {
+            final float dT = (event.timestamp - timestamp) * NS2S;
+            // Axis of the rotation sample, not normalized yet.
+            float axisX = event.values[0];
+            float axisY = event.values[1];
+            float axisZ = event.values[2];
+
+            // Calculate the angular speed of the sample
+            float omegaMagnitude = (float) Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
+
+            // Normalize the rotation vector if it's big enough to get the axis
+            if (omegaMagnitude > EPSILON) {
+                axisX /= omegaMagnitude;
+                axisY /= omegaMagnitude;
+                axisZ /= omegaMagnitude;
+            }
+
+            // Integrate around this axis with the angular speed by the time step
+            // in order to get a delta rotation from this sample over the time step
+            // We will convert this axis-angle representation of the delta rotation
+            // into a quaternion before turning it into the rotation matrix.
+            float thetaOverTwo = (float) omegaMagnitude * dT / 2.0f;
+            float sinThetaOverTwo = (float) Math.sin(thetaOverTwo);
+            float cosThetaOverTwo = (float) Math.cos(thetaOverTwo);
+            deltaRotationVector[0] = sinThetaOverTwo * axisX;
+            deltaRotationVector[1] = sinThetaOverTwo * axisY;
+            deltaRotationVector[2] = sinThetaOverTwo * axisZ;
+            deltaRotationVector[3] = cosThetaOverTwo;
+        }
+        timestamp = event.timestamp;
+        float[] deltaRotationMatrix = new float[9];
+        SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, deltaRotationVector);
+        // User code should concatenate the delta rotation we computed with the current
+        // rotation in order to get the updated rotation.
+        // rotationCurrent = rotationCurrent * deltaRotationMatrix;
     }
 
     private Runnable runnable = new Runnable() {
@@ -566,10 +790,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
             if (juegoEnPausa) {
                 PintarMatriz();
-                if (estadoVelocidadRapidez)
-                    operaciones.postDelayed(this, RAPIDEZDEPRISA);
-                else
-                    operaciones.postDelayed(this, RAPIDEZNORMAL);
+                operaciones.postDelayed(this, RAPIDEZNORMAL);
                 return;
             }
 
@@ -579,9 +800,9 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 int x, y, i, j;
                 for (x = 1, i = formaActual.x; x <= 4; x++, i++) {
                     for (y = 1, j = formaActual.y; y <= 4; y++, j++) {
-                        if (formaActual.mat[x][y].getState() == 1) {
-                            matrizDeJuego[i][j].setBehavior(BoardCell.BEHAVIOR_IS_FIXED);
-                            formaActual.mat[x][y].setBehavior(BoardCell.BEHAVIOR_IS_FIXED);
+                        if (formaActual.mat[x][y].getEstado() == 1) {
+                            matrizDeJuego[i][j].setComportamiento(PizarradeCeldas.BEHAVIOR_IS_FIXED);
+                            formaActual.mat[x][y].setComportamiento(PizarradeCeldas.BEHAVIOR_IS_FIXED);
                         }
                     }
                 }
@@ -596,77 +817,95 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                     return;
                 }
                 PintarMatriz();
-                if (estadoVelocidadRapidez) {
-                    CambiarEstadoVelocidadAcelerada(false);
+                    operaciones.removeCallbacks(runnable);
+                    operaciones.postDelayed(runnable, RAPIDEZNORMAL);
                     return;
-                }
             } else
                 PintarMatriz();
 
-            if (estadoVelocidadRapidez)
-                operaciones.postDelayed(this, RAPIDEZDEPRISA);
-            else
                 operaciones.postDelayed(this, RAPIDEZNORMAL);
         }
     };
 
-    void CambiarEstadoVelocidadAcelerada(boolean mFastSpeedState) {
-        // estadoVelocidadRapidez = false rapidez normal
-        // estadoVelocidadRapidez = true rapidez acelerada
-        operaciones.removeCallbacks(runnable);
-        estadoVelocidadRapidez = mFastSpeedState;
-        if (estadoVelocidadRapidez)
-            operaciones.postDelayed(runnable, RAPIDEZDEPRISA);
-        else
-            operaciones.postDelayed(runnable, RAPIDEZNORMAL);
+
+    /*Del paint como inspiracion para ver com ohacer algunas cosas
+    *
+    *     public boolean onTouchEvent (MotionEvent event){
+            float x=event.getX();
+            float y=event.getY();
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    touchStart(x,y);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    touchMove(x,y);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    touchUp();
+                    invalidate();
+                    break;
+            }
+            return true;
+        }
+        *
+        *
+    private void touchUp (){
+        path.lineTo(valX,valY);
+        canvas.drawPath(path,paint);
+        path.reset();
     }
 
-    void InicializadorDeJuego() {
+    protected void onDraw (Canvas canvas){
+        //fondo
+        canvas.drawColor(0xFFBBBBBB);
+        //lo pintado
+        canvas.drawBitmap(bitmap,0,0,null);
+        //trazo actual
+        canvas.drawPath(path,paint);
+    }*/
 
-        // Crear la pizarra del juego
-        matrizDeJuego = new BoardCell[numeroFilas][];
-        for (int i = 0; i < numeroFilas; i++) {
-            matrizDeJuego[i] = new BoardCell[numeroColumnas];
-            for (int j = 0; j < numeroColumnas; j++) {
-                matrizDeJuego[i][j] = new BoardCell();
-            }
-        }
+    /*del nivel ideas dibujar cuadricula
+    *
+    * public void onDraw (Canvas lienzo){
+        int lado, radio, radioPeq, trazo;
 
-        for (int j = 0; j < numeroColumnas; j++) {
-            for (int i = 0; i <= 2; i++) {
-                matrizDeJuego[i][j] = new BoardCell(1, Color.BLACK);
-            }
-            for (int i = numeroFilas - 3; i < numeroFilas; i++) {
-                matrizDeJuego[i][j] = new BoardCell(1, Color.BLACK);
-            }
-        }
+        lienzo.drawColor(Color.BLACK);
 
-        for (int i = 0; i < numeroFilas; i++) {
-            for (int j = 0; j <= 2; j++) {
-                matrizDeJuego[i][j] = new BoardCell(1, Color.BLACK);
-            }
-            for (int j = numeroColumnas - 3; j < numeroColumnas; j++) {
-                matrizDeJuego[i][j] = new BoardCell(1, Color.BLACK);
-            }
-        }
+        lado = getResources().getConfiguration().screenHeightDp;
 
-        for (int j = 3; j < numeroColumnas - 3; j++) {
-            matrizDeJuego[numeroFilas - 4][j] = new BoardCell(matrizDeJuego[numeroFilas - 4][j].getState(), matrizDeJuego[numeroFilas - 4][j].getColor(), BoardCell.BEHAVIOR_IS_FIXED);
-        }
+        radio=lado/2;
 
-        // Crear el bloque de tetris inicial
-        estadoActual = CrearLaForma();
+        radioPeq=lado/10;
 
-        // Empezar el juego
-        juegoEnMarcha = true;
-        juegoEnPausa = false;
+        trazo=lado/100;
 
-        // Pintar la matrix inicial
-        PintarMatriz();
+        Paint lapiz=new Paint();
 
-        //Cambiar el estado de la velocidad
-        CambiarEstadoVelocidadAcelerada(false);
-    }
+        lapiz.setColor(Color.BLUE);
+
+        lienzo.drawCircle((int)(radio*1.8), (int)(radio*2.8), (int)(radio*1.8), lapiz);
+
+        lapiz.setColor(Color.GREEN);
+
+        lienzo.drawCircle((int)(radio*1.8), (int)(radio*2.8), radio-trazo, lapiz);
+
+        lapiz.setColor(Color.BLUE);
+
+        lienzo.drawCircle((int)(radio*1.8), (int)(radio*2.8), radioPeq+trazo, lapiz);
+
+        lapiz.setStrokeWidth(trazo);
+
+
+        lienzo.drawLine((float)(radio*1.8), (float)(radio*1.8), (float)(radio*1.8), (float)(radio*4), lapiz);
+
+
+        lienzo.drawLine(0, (float)(radio*2.8), (float)(lado*1.8), (float)(radio*2.8), lapiz);
+
+        pincel.setColor(Color.RED);
+        lienzo.drawCircle((float)(ejex*3),(float)(ejey*2),ejez+tamano,pincel);
+    }*/
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -696,25 +935,18 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         if (!juegoEnMarcha) {
+
+            Toast.makeText(getBaseContext(), "Vuelve a la pantalla principal ", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PantallaJuego.this, MainActivity.class);
+            startActivity(intent);
             finish();
             return true;
         }
         if (juegoEnPausa || !estadoActual)
             return false;
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        float width = size.x;
-        float x = e.getX();
-        if (x > width / 2.0) {
-            // rotar a la izquierda
-            RotarIzquierda(formaActual);
-            PintarMatriz();
-        } else {
-            // rotar a la derecha
-            RotarDerecha(formaActual);
-            PintarMatriz();
-        }
+
+        Rotar(formaActual);
+        PintarMatriz();
         return true;
     }
 
@@ -729,42 +961,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (!juegoEnMarcha)
-            return false;
-        try {
-            float x1 = e1.getX();
-            float y1 = e1.getY();
 
-            float x2 = e2.getX();
-            float y2 = e2.getY();
-
-            double angle = getAngle(x1, y1, x2, y2);
-
-            if (inRange(angle, 45, 135)) {
-                if (juegoEnPausa)
-                    juegoEnPausa = false;
-                else {
-                    juegoEnPausa = true;
-                    PintarMatriz();
-                }
-            } else if (inRange(angle, 0, 45) || inRange(angle, 315, 360)) {
-                if (juegoEnPausa || !estadoActual)
-                    return false;
-                MoverForma(IR_DERECHA, formaActual);
-                PintarMatriz();
-            } else if (inRange(angle, 225, 315)) {
-                if (juegoEnPausa || !estadoActual)
-                    return false;
-                CambiarEstadoVelocidadAcelerada(true);
-            } else {
-                if (juegoEnPausa || !estadoActual)
-                    return false;
-                MoverForma(IR_IZQUIERDA, formaActual);
-                PintarMatriz();
-            }
-
-        } catch (Exception e) {
-        }
         return true;
     }
 
@@ -786,128 +983,83 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         TiempoDeEspera = System.currentTimeMillis();
     }
 
-    public double getAngle(float x1, float y1, float x2, float y2) {
-
-        double rad = Math.atan2(y1 - y2, x2 - x1) + Math.PI;
-        return (rad * 180 / Math.PI + 180) % 360;
-    }
-
-    private boolean inRange(double angle, float init, float end) {
-        return (angle >= init) && (angle < end);
-    }
-
-    public class BoardCell {
+    public class PizarradeCeldas {
         public final static int BEHAVIOR_IS_FIXED = 2, BEHAVIOR_IS_FALLING = 1, BEHAVIOR_NOTHING = 0;
-        private int state, color, behavior;
+        private int estado, color, comportamiento;
 
-        public BoardCell() {
-            state = 0;
-            color = Color.BLACK;
-            behavior = BEHAVIOR_NOTHING;
+        public PizarradeCeldas() {
+            estado = 0;
+            color = Color.rgb(244,242,205);
+            comportamiento = BEHAVIOR_NOTHING;
         }
 
-        public BoardCell(int state, int color) {
-            this.state = state;
+        public PizarradeCeldas(int estado, int color) {
+            this.estado = estado;
             this.color = color;
-            this.behavior = BEHAVIOR_NOTHING;
+            this.comportamiento = BEHAVIOR_NOTHING;
         }
 
-        public BoardCell(int state, int color, int behavior) {
-            this.state = state;
+        public PizarradeCeldas(int estado, int color, int comportamiento) {
+            this.estado = estado;
             this.color = color;
-            this.behavior = behavior;
+            this.comportamiento = comportamiento;
         }
 
-        public int getState() {
-            return state;
+        public int getEstado() {
+            return estado;
         }
 
         public int getColor() {
             return color;
         }
 
-        public int getBehavior() {
-            return behavior;
+        public int getComportamiento() {
+            return comportamiento;
         }
 
-        public void setState(int state) {
-            this.state = state;
+        public void setEstado(int estado) {
+            this.estado = estado;
         }
 
         public void setColor(int color) {
             this.color = color;
         }
 
-        public void setBehavior(int behavior) {
-            this.behavior = behavior;
+        public void setComportamiento(int comportamiento) {
+            this.comportamiento = comportamiento;
         }
     }
 
     public class Forma {
         public int x, y;
-        public BoardCell[][] mat = new BoardCell[5][5];
-        public boolean canRotate;
+        public PizarradeCeldas[][] mat = new PizarradeCeldas[5][5];
 
-        Forma(int[][] _mat, int _color, final int behavior) {
+        Forma(int[][] _mat, int _color, final int comportamiento) {
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
-                    if (_mat[i][j] == 1)
-                        mat[i][j] = new BoardCell(_mat[i][j], _color, behavior);
+                    if (_mat[i][j] != 1)
+                        mat[i][j] = new PizarradeCeldas();
                     else
-                        mat[i][j] = new BoardCell();
-
-                }
-            }
-            canRotate = true;
-        }
-
-        Forma(int[][] _mat, int _color, final int behavior, boolean _canRotate) {
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
-                    if (_mat[i][j] == 1)
-                        mat[i][j] = new BoardCell(_mat[i][j], _color, behavior);
-                    else
-                        mat[i][j] = new BoardCell();
-
-                }
-            }
-            canRotate = _canRotate;
-        }
-
-        void RotarALaIzquierda() {
-            if (!this.canRotate) {
-                return;
-            }
-
-            BoardCell[][] aux = new BoardCell[5][5];
-            for (int i = 1; i < 5; i++) {
-                for (int j = 1; j < 5; j++) {
-                    aux[4 - j + 1][i] = mat[i][j];
-                }
-            }
-            for (int i = 1; i < 5; i++) {
-                for (int j = 1; j < 5; j++) {
-                    mat[i][j] = aux[i][j];
+                        mat[i][j] = new PizarradeCeldas(_mat[i][j], _color, comportamiento);
                 }
             }
         }
 
-        void RotarALaDerecha() {
-            if (!this.canRotate) {
-                return;
-            }
+        void RotarLaPieza() {
 
-            BoardCell[][] aux = new BoardCell[5][5];
-            for (int i = 1; i < 5; i++) {
-                for (int j = 1; j < 5; j++) {
-                    aux[j][4 - i + 1] = mat[i][j];
+            PizarradeCeldas[][] aux = new PizarradeCeldas[5][5];
+                for (int i = 1; i < 5; i++) {
+                    for (int j = 1; j < 5; j++) {
+                        aux[4 - j + 1][i] = mat[i][j];
+                    }
                 }
-            }
-            for (int i = 1; i < 5; i++) {
-                for (int j = 1; j < 5; j++) {
-                    mat[i][j] = aux[i][j];
+                for (int i = 1; i < 5; i++) {
+                    for (int j = 1; j < 5; j++) {
+                        mat[i][j] = aux[i][j];
+                    }
                 }
-            }
+
+
         }
     }
 }
