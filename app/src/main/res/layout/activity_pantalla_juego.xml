@@ -33,6 +33,54 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/botonizquierda"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/izquierda"
+        android:scaleType="fitXY"
+        android:text="Button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+
+    <ImageButton
+        android:id="@+id/botonderecha"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/play"
+        android:scaleType="fitXY"
+        android:text="Button"
+        app:layout_constraintStart_toEndOf="@+id/botonizquierda"
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+
+    <ImageButton
+        android:id="@+id/botonpausa"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="31dp"
+        android:src="@drawable/parar"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+
+    <ImageButton
+        android:id="@+id/botonabajo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        android:src="@drawable/abajo"
+        app:layout_constraintStart_toEndOf="@+id/botonderecha"
+        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+
     <TextView
         android:id="@+id/puntos"
         android:layout_width="wrap_content"
@@ -67,40 +115,15 @@
         android:textSize="30sp" />
 
     <ImageButton
-        android:id="@+id/botonizquierda"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/izquierda"
+        android:id="@+id/reiniciojuego"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="14dp"
+        android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_board" />
-
-    <ImageButton
-        android:id="@+id/botonderecha"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="91dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/play"
-        android:scaleType="fitXY"
-        android:text="Button"
-        app:layout_constraintStart_toEndOf="@+id/botonizquierda"
-        app:layout_constraintTop_toBottomOf="@+id/game_board" />
-
-    <ImageButton
-        android:id="@+id/botonpausa"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="31dp"
-        android:src="@drawable/parar"
-        android:scaleType="fitXY"
-        android:backgroundTint="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_board" />
+        android:src="@drawable/volver"
+        app:layout_constraintEnd_toStartOf="@+id/verPieza"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

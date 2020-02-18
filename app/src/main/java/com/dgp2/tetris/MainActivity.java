@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    private ImageButton botonplay;
+    private ImageButton botonplay,botonranking, botonajustes, botonayuda;
     private Intent intent=null;
     private long tiempoesperavolver;
 
@@ -18,7 +18,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         initViews();
+
+        botonranking.setVisibility(View.INVISIBLE);
+        botonajustes.setVisibility(View.INVISIBLE);
+
+
+
+        botonranking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        botonajustes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        botonayuda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                intent = new Intent(MainActivity.this, ayuda.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
     }
 
     public void iniciarJuego(View view){
@@ -29,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews(){
         botonplay = findViewById(R.id.botonPlay);
+
+        botonranking=findViewById(R.id.ranking);
+        botonajustes=findViewById(R.id.configuracion);
+        botonayuda=findViewById(R.id.ayuda);
     }
 
     public void onBackPressed(){
