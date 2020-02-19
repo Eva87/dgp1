@@ -908,6 +908,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
             if (si) {
                 ++k;
+                puntuacion+=30;
                 encontrado = true;
             } else {
                 if (k == 0)
@@ -927,7 +928,6 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         }
         // se actualiza la puntuacion incrementando 30 por linea
         if(k>0){
-            puntuacion+=30;
             long patronvibracion[]={0,100,100,100,100};
             vibrador.vibrate(patronvibracion,-1);
         }
@@ -1055,13 +1055,13 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     public void cambiarcolor(int colorcambiar){
 
-        int colorJ=Color.YELLOW;
-        int color2=Color.rgb(248, 138, 17);
-        int color5=Color.CYAN;
-        int colorl=Color.rgb(255, 51, 249);
-        int colori=Color.RED;
-        int colort=Color.rgb(108, 230, 21);
-        int coloro=Color.BLUE;
+        colorJ=Color.YELLOW;
+        color2=Color.rgb(248, 138, 17);
+        color5=Color.CYAN;
+        colorl=Color.rgb(255, 51, 249);
+        colori=Color.RED;
+        colort=Color.rgb(108, 230, 21);
+        coloro=Color.BLUE;
     }
 
 
