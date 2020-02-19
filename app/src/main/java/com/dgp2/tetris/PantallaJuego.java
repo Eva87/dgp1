@@ -908,6 +908,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
             if (si) {
                 ++k;
+                // se actualiza la puntuacion incrementando 30 por linea
                 puntuacion+=30;
                 encontrado = true;
             } else {
@@ -926,7 +927,6 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 matrizDeJuego[3 + pas][j] = new PizarradeCeldas();
             }
         }
-        // se actualiza la puntuacion incrementando 30 por linea
         if(k>0){
             long patronvibracion[]={0,100,100,100,100};
             vibrador.vibrate(patronvibracion,-1);
