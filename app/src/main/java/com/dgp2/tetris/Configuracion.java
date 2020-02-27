@@ -28,6 +28,13 @@ public class Configuracion extends AppCompatActivity {
         finish();
     }
 
+    public void cambiarcolordelaspiezas (View view){
+
+        Intent intent = new Intent(Configuracion.this, Cambiocolorpiezas.class);
+        startActivity(intent);
+        finish();
+    }
+
 
 
     @Override

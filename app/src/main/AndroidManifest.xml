@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/indice"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Configuracion"></activity>
+        <activity android:name=".Cambiocolorpiezas"></activity>
+        <activity android:name=".Configuracion" />
         <activity android:name=".Ranking" />
         <activity android:name=".ayuda" />
         <activity android:name=".PantallaJuego" />

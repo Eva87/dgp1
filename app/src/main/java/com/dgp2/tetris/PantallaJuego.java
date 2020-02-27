@@ -85,6 +85,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     ImageView vistaPiezaProxima;
 
+    int tpj;
 
     Random random = new Random();
 
@@ -111,6 +112,10 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         vibrador = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         inicio=false;
         estadoActual=false;
+
+        cambiarcolorconfiguracion();
+
+
         vistaPiezaProxima=  findViewById(R.id.verPieza);
         numeroFilas=numfilasmodifpreferences+6;
         numeroColumnas=numcolumnasasmodifpreferences+6;
@@ -134,6 +139,16 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
 */
 
+        Bundle datos = this.getIntent().getExtras();
+
+        if(datos != null) {
+            tpj = datos.getInt("TipoPieza");
+        }
+        else{
+            tpj=0;
+        }
+
+        Toast.makeText(this, String.valueOf(tpj), Toast.LENGTH_SHORT).show();
 
         TextView textView = findViewById(R.id.pierde);
         textView.setVisibility(View.INVISIBLE);
@@ -460,6 +475,96 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             PintarMatriz();
         }
     }
+
+    public void cambiarcolorconfiguracion(){
+        switch (tpj){
+            case 0:
+
+                colorJ=Color.YELLOW;
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.CYAN;
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.RED;
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.BLUE;
+                break;
+            case 1:
+
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            case 2:
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            case 3:
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            case 4:
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            case 5:
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            case 6:
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            case 7:
+                colorJ=Color.rgb(248, 138, 17);
+                color2=Color.rgb(248, 138, 17);
+                color5=Color.rgb(248, 138, 17);
+                colorl=Color.rgb(255, 51, 249);
+                colori=Color.rgb(248, 138, 17);
+                colort=Color.rgb(108, 230, 21);
+                coloro=Color.rgb(248, 138, 17);
+                break;
+            default:
+
+                    colorJ=Color.YELLOW;
+                    color2=Color.rgb(248, 138, 17);
+                    color5=Color.CYAN;
+                    colorl=Color.rgb(255, 51, 249);
+                    colori=Color.RED;
+                    colort=Color.rgb(108, 230, 21);
+                    coloro=Color.BLUE;
+                    break;
+        }
+    }
+
 
     private void FijarMatrizJuego() {
         /*se hace que la matriz se guarden las posiciones en la pantalla*/

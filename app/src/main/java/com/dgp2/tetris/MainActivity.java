@@ -2,7 +2,9 @@ package com.dgp2.tetris;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton botonplay,botonranking, botonajustes, botonayuda;
     private Intent intent=null;
     private long tiempoesperavolver;
+    private String username;
+    int tp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +23,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        SharedPreferences preferences = getSharedPreferences(username, Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = preferences.edit();
+        Bundle datos = this.getIntent().getExtras();
+
+        if(datos != null) {
+            tp = datos.getInt("TipoPiezas");
+
+        }
+        else{
+            tp=1;
+        }
+
         initViews();
 
-        botonranking.setVisibility(View.INVISIBLE);
-        botonajustes.setVisibility(View.INVISIBLE);
+
+      /*  botonranking.setVisibility(View.INVISIBLE);
+        botonajustes.setVisibility(View.INVISIBLE);*/
 
 
 
@@ -31,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                intent = new Intent(MainActivity.this, Ranking.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -38,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                intent = new Intent(MainActivity.this, Configuracion.class);
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -55,7 +78,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void iniciarJuego(View view){
+
+
+       /* SharedPreferences preferences = getSharedPreferences(username, Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = preferences.edit();
+        myEditor.putInt("TipoPieza", tp);
+        myEditor.commit();*/
+
+
         intent = new Intent(MainActivity.this, PantallaJuego.class);
+        intent.putExtra("TipoPieza", tp);
         startActivity(intent);
         finish();
     }
