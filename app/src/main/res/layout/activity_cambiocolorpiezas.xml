@@ -16,7 +16,7 @@
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:color/holo_blue_bright" />
+        app:srcCompat="@drawable/op1" />
 
     <ImageButton
         android:id="@+id/color3"
@@ -27,7 +27,7 @@
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/color1"
-        app:srcCompat="@android:color/holo_purple" />
+        app:srcCompat="@drawable/op3" />
 
     <ImageButton
         android:id="@+id/color5"
@@ -38,7 +38,7 @@
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/color3"
-        app:srcCompat="@android:color/holo_green_light" />
+        app:srcCompat="@drawable/op5" />
 
     <ImageButton
         android:id="@+id/color2"
@@ -49,7 +49,7 @@
         android:scaleType="fitXY"
         app:layout_constraintStart_toEndOf="@+id/color1"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:color/holo_orange_dark" />
+        app:srcCompat="@drawable/op2" />
 
     <ImageButton
         android:id="@+id/color4"
@@ -60,7 +60,7 @@
         android:scaleType="fitXY"
         app:layout_constraintStart_toEndOf="@+id/color3"
         app:layout_constraintTop_toBottomOf="@+id/color2"
-        app:srcCompat="@android:color/holo_red_dark" />
+        app:srcCompat="@drawable/op4" />
 
     <ImageButton
         android:id="@+id/color6"
@@ -71,7 +71,7 @@
         android:scaleType="fitXY"
         app:layout_constraintStart_toEndOf="@+id/color5"
         app:layout_constraintTop_toBottomOf="@+id/color4"
-        app:srcCompat="@android:color/holo_orange_light" />
+        app:srcCompat="@drawable/op6" />
 
     <ImageButton
         android:id="@+id/imageButton10"
