@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private ImageButton botonplay,botonranking, botonajustes, botonayuda;
     private Intent intent=null;
+    private EditText recogernombre;
     private long tiempoesperavolver;
     private String username;
     int tp;
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         intent = new Intent(MainActivity.this, PantallaJuego.class);
         intent.putExtra("TipoPieza", tp);
+        intent.putExtra("Nombre", String.valueOf(recogernombre));
         startActivity(intent);
         finish();
     }
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         botonranking=findViewById(R.id.ranking);
         botonajustes=findViewById(R.id.configuracion);
         botonayuda=findViewById(R.id.ayuda);
+        recogernombre=findViewById(R.id.nombrejugador);
     }
 
     public void onBackPressed(){

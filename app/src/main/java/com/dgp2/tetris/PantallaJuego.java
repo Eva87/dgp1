@@ -54,15 +54,19 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     private static final float NS2S = 1.0f / 1000000000.0f;
     private final float[] deltaRotationVector = new float[4];
     private float timestamp;
+    PizarradeCeldas[][] matrizDeJuego;
+    boolean estadoVelocidadRapidez;
 
     /*se inicializan los colores a jugar*/
-    int colorJ=Color.YELLOW;
-    int color2=Color.rgb(248, 138, 17);
-    int color5=Color.CYAN;
-    int colorl=Color.rgb(255, 51, 249);
-    int colori=Color.RED;
-    int colort=Color.rgb(108, 230, 21);
-    int coloro=Color.BLUE;
+    int colorJ;
+    int color2;
+    int color5;
+    int colorl;
+    int colori;
+    int colort;
+    int coloro;
+
+    boolean boleanolinea=false;
 
     int RAPIDEZNORMAL = 500;
     int RAPIDEZDEPRISA = 50;
@@ -71,7 +75,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     int puntuacion;
     boolean juegoEnMarcha, juegoEnPausa, estadoActual;
     private long TiempoDeEspera;
-    ImageButton botonizquierda, botonderecha,botonpausa, botonrapido, reiniciarjuego;
+    ImageButton botonizquierda, botonderecha,botonpausa, botonabajo, botonrapido, reiniciarjuego;
 
     /*el que cada 30 segundos salga una ficha nueva solo seria posible si el numero de filas fuera mas grande
     * ya que tarda 8 segundos en llegar abajo*/
@@ -86,12 +90,12 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     ImageView vistaPiezaProxima;
 
     int tpj;
+    String nombrejugador;
 
     Random random = new Random();
 
     Vibrator vibrador;
 
-    PizarradeCeldas[][] matrizDeJuego;
     Bitmap bitmap;
     Canvas canvas;
 
@@ -113,7 +117,6 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         inicio=false;
         estadoActual=false;
 
-        cambiarcolorconfiguracion();
 
 
         vistaPiezaProxima=  findViewById(R.id.verPieza);
@@ -124,6 +127,11 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             case "Normal": {
                 RAPIDEZNORMAL = 500;
                 RAPIDEZDEPRISA = 50;
+                break;
+            }
+            case "Rapido": {
+                RAPIDEZNORMAL = 250;
+                RAPIDEZDEPRISA = 25;
                 break;
             }
         }
@@ -143,12 +151,14 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
         if(datos != null) {
             tpj = datos.getInt("TipoPieza");
+            nombrejugador=datos.getString("Nombre");
         }
         else{
             tpj=0;
+            nombrejugador="Anonimo";
         }
 
-        Toast.makeText(this, String.valueOf(tpj), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, String.valueOf(nombrejugador), Toast.LENGTH_SHORT).show();
 
         TextView textView = findViewById(R.id.pierde);
         textView.setVisibility(View.INVISIBLE);
@@ -156,7 +166,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         textView2.setVisibility(View.INVISIBLE);
         botonizquierda=findViewById(R.id.botonizquierda);
         botonderecha=findViewById(R.id.botonderecha);
-        botonrapido=findViewById(R.id.botonabajo);
+        botonrapido=findViewById(R.id.abajorapido);
+        botonabajo=findViewById(R.id.botonabajo);
         botonpausa=findViewById(R.id.botonpausa);
         reiniciarjuego=findViewById(R.id.reiniciojuego);
         reiniciarjuego.setVisibility(View.VISIBLE);
@@ -186,6 +197,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
             ejex++;
         }
+        cambiarcolorconfiguracion();
 
         /*      +
          *       +
@@ -341,6 +353,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         // Pintar la matrix inicial
         PintarMatriz();
 
+        CambiarEstadoVelocidadAcelerada(false);
+
         //Cambiar el estado de la velocidad
         operaciones.removeCallbacks(runnable);
         operaciones.postDelayed(runnable, RAPIDEZNORMAL);
@@ -416,7 +430,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
         });
 
-        botonrapido.setOnClickListener(new View.OnClickListener() {
+        botonabajo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -427,6 +441,14 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                     PintarMatriz();
 
                 }
+            }
+        });
+
+        botonrapido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                operaciones.postDelayed(runnable, RAPIDEZDEPRISA);
             }
         });
 
@@ -449,13 +471,14 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     public void cambiarcoloracapon(){
 
-        int colorJ=Color.YELLOW;
+       /* int colorJ=Color.YELLOW;
         int color2=Color.rgb(248, 138, 17);
         int color5=Color.CYAN;
         int colorl=Color.rgb(255, 51, 249);
         int colori=Color.RED;
         int colort=Color.rgb(108, 230, 21);
-        int coloro=Color.BLUE;
+        int coloro=Color.BLUE;*/
+
     }
 
     public void start(){
@@ -478,8 +501,62 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     public void cambiarcolorconfiguracion(){
         switch (tpj){
-            case 0:
+            case 1:
 
+                colorJ=Color.RED;
+                color2=Color.rgb(108, 230, 21);//verde
+                color5=Color.rgb(248, 138, 17);//naranja
+                colorl=Color.YELLOW;
+                colori=Color.CYAN;
+                colort=Color.BLUE;
+                coloro=Color.rgb(255, 51, 249);//rosa
+                break;
+            case 2:
+                colorJ=Color.CYAN;
+                color2=Color.BLUE;
+                color5=Color.rgb(108, 230, 21);//verde
+                colorl=Color.RED;
+                colori=Color.rgb(248, 138, 17);//naranja
+                colort=Color.rgb(255, 51, 249);//rosa
+                coloro=Color.YELLOW;
+                break;
+            case 3:
+                colorJ=Color.rgb(248, 138, 17);//naranja
+                color2=Color.rgb(255, 51, 249);//rosa
+                color5=Color.BLUE;
+                colorl=Color.CYAN;
+                colori=Color.rgb(108, 230, 21);//verde
+                colort=Color.YELLOW;
+                coloro=Color.RED;
+                break;
+            case 4://rojos
+                colorJ=Color.rgb(239, 28,58);
+                color2=Color.rgb(242,154,193);
+                color5=Color.rgb(241,124,171);
+                colorl=Color.rgb(241,59,97);
+                colori=Color.rgb(254, 0, 0);
+                colort=Color.rgb(244,99,150);
+                coloro=Color.rgb(238,81,125);
+                break;
+            case 5://verdes
+                colorJ=Color.rgb(115,175,100);
+                color2=Color.rgb(174,245,199);
+                color5=Color.rgb(145,245,170);
+                colorl=Color.rgb(125,200,110);
+                colori=Color.rgb(30,170,5);
+                colort=Color.rgb(130,242,133);
+                coloro=Color.rgb(125,225,110);
+                break;
+            case 6://azules
+                colorJ=Color.rgb(24,82,251);
+                color2=Color.rgb(154,242,248);
+                color5=Color.rgb(118,212,247);
+                colorl=Color.rgb(42,116,250);
+                colori=Color.rgb(8,2,254);
+                colort=Color.rgb(89,186,248);
+                coloro=Color.rgb(59,153,250);
+                break;
+            default:
                 colorJ=Color.YELLOW;
                 color2=Color.rgb(248, 138, 17);
                 color5=Color.CYAN;
@@ -488,81 +565,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 colort=Color.rgb(108, 230, 21);
                 coloro=Color.BLUE;
                 break;
-            case 1:
-
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            case 2:
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            case 3:
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            case 4:
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            case 5:
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            case 6:
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            case 7:
-                colorJ=Color.rgb(248, 138, 17);
-                color2=Color.rgb(248, 138, 17);
-                color5=Color.rgb(248, 138, 17);
-                colorl=Color.rgb(255, 51, 249);
-                colori=Color.rgb(248, 138, 17);
-                colort=Color.rgb(108, 230, 21);
-                coloro=Color.rgb(248, 138, 17);
-                break;
-            default:
-
-                    colorJ=Color.YELLOW;
-                    color2=Color.rgb(248, 138, 17);
-                    color5=Color.CYAN;
-                    colorl=Color.rgb(255, 51, 249);
-                    colori=Color.RED;
-                    colort=Color.rgb(108, 230, 21);
-                    coloro=Color.BLUE;
-                    break;
         }
+       // matrizDeJuego
     }
 
 
@@ -922,38 +926,107 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         /*se guarda la forma proxima de la vuelta anterior para que sea la actual y se genera una nueva proxima forma que se
         * mostrara en la pantalla de la proxima forma siendo aleatoria la forma que vaya a salir*/
         formaActual=proximaForma;
+        if(formaActual.tipoforma2){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(color2);
+        }else if(formaActual.tipoforma5){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(color5);
+        }else if(formaActual.tipoformaL){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(colorl);
+        }else if(formaActual.tipoformaJ){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(colorJ);
+        }else if(formaActual.tipoformaT){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(colort);
+        }else if(formaActual.tipoformacuadrado){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(coloro);
+        }else if(formaActual.tipoformalarga){
+            for(int i=0;i<5;i++)
+                for(int j=0;j<5;j++)
+                    formaActual.mat[i][j].setColor(colori);
+        }
         int alea=random.nextInt(7);
         proximaForma = formas[alea];
         switch (alea){
             case 0:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(colorl);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figural));
-                vistaPiezaProxima.setColorFilter(Color.rgb(255, 51, 249));
-                vistaPiezaProxima.setBackgroundColor(Color.rgb(255, 51, 249));
+                vistaPiezaProxima.setColorFilter(colorl);
+
+                proximaForma.tipoformaL=true;
                 break;
             case 1:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(color2);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figura2));
-                vistaPiezaProxima.setColorFilter(Color.rgb(248, 138, 17));
+                vistaPiezaProxima.setColorFilter(color2);
+                proximaForma.tipoforma2=true;
                 break;
             case 2:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(colori);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figurai));
-                vistaPiezaProxima.setColorFilter(Color.RED);
+                vistaPiezaProxima.setColorFilter(colori);
                 proximaForma.tipoformalarga=true;
                 break;
             case 3:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(coloro);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figurao));
-                vistaPiezaProxima.setColorFilter(Color.BLUE);
+                vistaPiezaProxima.setColorFilter(coloro);
                 break;
             case 4:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(colort);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figurat));
-                vistaPiezaProxima.setColorFilter(Color.rgb(108, 230, 21));
+                vistaPiezaProxima.setColorFilter(colort);
+                proximaForma.tipoformaT=true;
                 break;
             case 5:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(color5);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figura5));
-                vistaPiezaProxima.setColorFilter(Color.CYAN);
+                vistaPiezaProxima.setColorFilter(color5);
+                proximaForma.tipoforma5=true;
                 break;
             case 6:
+                if(boleanolinea==true){
+                    for(int i=0;i<5;i++)
+                        for(int j=0;j<5;j++)
+                            proximaForma.mat[i][j].setColor(colorJ);
+                }
                 vistaPiezaProxima.setImageDrawable(getResources().getDrawable(R.drawable.figuraj));
-                vistaPiezaProxima.setColorFilter(Color.YELLOW);
+                vistaPiezaProxima.setColorFilter(colorJ);
+                proximaForma.tipoformaJ=true;
                 break;
 
         }
@@ -999,6 +1072,17 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         return false;
     }
 
+    void CambiarEstadoVelocidadAcelerada(boolean estadodelavelocidad) {
+         estadoVelocidadRapidez = false;  //rapidez normal
+         estadoVelocidadRapidez = true; // rapidez acelerada
+        operaciones.removeCallbacks(runnable);
+        estadoVelocidadRapidez = estadodelavelocidad;
+        if (estadoVelocidadRapidez)
+            operaciones.postDelayed(runnable, RAPIDEZDEPRISA);
+        else
+            operaciones.postDelayed(runnable, RAPIDEZNORMAL);
+    }
+
     private boolean Check() {
 
         /* comprueba si se ha hecho una linea completa y en caso afirmativo esta o estas se eliminaran del tablero*/
@@ -1016,6 +1100,14 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 // se actualiza la puntuacion incrementando 30 por linea
                 puntuacion+=30;
                 encontrado = true;
+                tpj=tpj+1;
+                if(tpj>6){
+                    tpj=1;
+                }
+                cambiarcolorconfiguracion();
+
+                boleanolinea=true;
+
             } else {
                 if (k == 0)
                     continue;
@@ -1213,13 +1305,15 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-
             if (!juegoEnMarcha) {
                 return;
             }
             if (juegoEnPausa) {
                 PintarMatriz();
-                operaciones.postDelayed(this, RAPIDEZNORMAL);
+                if (estadoVelocidadRapidez)
+                    operaciones.postDelayed(this, RAPIDEZDEPRISA);
+                else
+                    operaciones.postDelayed(this, RAPIDEZNORMAL);
                 return;
             }
 
@@ -1246,12 +1340,18 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                     return;
                 }
                 PintarMatriz();
+                if (estadoVelocidadRapidez) {
+                    CambiarEstadoVelocidadAcelerada(false);
+                    return;
+                }
                     operaciones.removeCallbacks(runnable);
                     operaciones.postDelayed(runnable, RAPIDEZNORMAL);
                     return;
             } else
                 PintarMatriz();
-
+            if (estadoVelocidadRapidez)
+                operaciones.postDelayed(this, RAPIDEZDEPRISA);
+            else
                 operaciones.postDelayed(this, RAPIDEZNORMAL);
         }
     };
@@ -1405,6 +1505,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         /*al pulsar dos veces se vuelve a la pantalla anterior*/
         if (TiempoDeEspera + 1500 > System.currentTimeMillis()) {
             Intent intent = new Intent(PantallaJuego.this, MainActivity.class);
+
+            //aqui devolver puntuacion
             startActivity(intent);
             finish();
         } else {
@@ -1465,6 +1567,11 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         public int x, y;
         boolean tipoformalarga=false;
         boolean tipoformacuadrado=false;
+        boolean tipoforma5=false;
+        boolean tipoforma2=false;
+        boolean tipoformaT=false;
+        boolean tipoformaL=false;
+        boolean tipoformaJ=false;
         public PizarradeCeldas[][] mat = new PizarradeCeldas[5][5];
 
         Forma(int[][] _mat, int _color, final int comportamiento) {
@@ -1477,6 +1584,15 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 }
             }
         }
+
+       /* void setcolorpieza(){
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    mat[i][j].setColor();
+                }
+            }
+        }*/
 
         void RotarLaPieza() {
 
