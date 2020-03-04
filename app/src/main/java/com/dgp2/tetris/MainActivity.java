@@ -18,21 +18,23 @@ public class MainActivity extends AppCompatActivity {
     private EditText recogernombre;
     private long tiempoesperavolver;
     private String username;
+    private int puntos;
+    private String nombre;
     int tp;
+    int val[]= new int[10];
+    String posnom[]= new String[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        SharedPreferences preferences = getSharedPreferences(username, Context.MODE_PRIVATE);
-        SharedPreferences.Editor myEditor = preferences.edit();
         Bundle datos = this.getIntent().getExtras();
 
         if(datos != null) {
             tp = datos.getInt("TipoPiezas");
-
+            puntos=datos.getInt("Puntuacion");
+            nombre=datos.getString("Nombrevuelta");
         }
         else{
             tp=1;
@@ -41,8 +43,34 @@ public class MainActivity extends AppCompatActivity {
         initViews();
 
 
+
+        SharedPreferences preferences = getSharedPreferences(username, Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = preferences.edit();
+
+        int posicion=0;
+        for (int i=0;i<10;i++){
+            val[i] = preferences.getInt("punt"+i, 0);
+            if(puntos>val[i]){
+                posicion=i;
+            }
+            posnom[i] = preferences.getString("nom"+i, "");
+            if(posnom[i].isEmpty()){
+                posnom[i]= "padawan";
+            }
+        }
+        for (int i=9;i>posicion;i++){
+            val[i] =val[i-1];
+        }
+        val[posicion]=puntos;
+        for (int i=0;i<10;i++){
+            myEditor.putInt("punt"+i, val[i]);
+            myEditor.putString("nom"+i,  posnom[i]);
+        }
+        myEditor.commit();
+
+
       /*  botonranking.setVisibility(View.INVISIBLE);
-        botonajustes.setVisibility(View.INVISIBLE);*/
+          botonajustes.setVisibility(View.INVISIBLE);*/
 
 
 
@@ -88,10 +116,9 @@ public class MainActivity extends AppCompatActivity {
         myEditor.putInt("TipoPieza", tp);
         myEditor.commit();*/
 
-
         intent = new Intent(MainActivity.this, PantallaJuego.class);
         intent.putExtra("TipoPieza", tp);
-        intent.putExtra("Nombre", String.valueOf(recogernombre));
+        intent.putExtra("Nombre", String.valueOf(recogernombre.getText().toString().trim()));
         startActivity(intent);
         finish();
     }

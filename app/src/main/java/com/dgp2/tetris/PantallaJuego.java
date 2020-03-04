@@ -158,7 +158,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             nombrejugador="Anonimo";
         }
 
-        Toast.makeText(this, String.valueOf(nombrejugador), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, nombrejugador, Toast.LENGTH_SHORT).show();
 
         TextView textView = findViewById(R.id.pierde);
         textView.setVisibility(View.INVISIBLE);
@@ -1084,7 +1084,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     }
 
     private boolean Check() {
-
+        int cont =0;
         /* comprueba si se ha hecho una linea completa y en caso afirmativo esta o estas se eliminaran del tablero*/
         int k = 0;
         boolean encontrado = false;
@@ -1097,6 +1097,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             }
             if (si) {
                 ++k;
+                cont++;
                 // se actualiza la puntuacion incrementando 30 por linea
                 puntuacion+=30;
                 encontrado = true;
@@ -1107,6 +1108,10 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 cambiarcolorconfiguracion();
 
                 boleanolinea=true;
+                for (int l = numeroFilas - 4; l >= 3; --l) {
+                    for (int j = 3; j < numeroColumnas - 3; j++) {
+                        matrizDeJuego[l][j].setColor(colorJ);
+                    }}
 
             } else {
                 if (k == 0)
@@ -1119,6 +1124,10 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 }
             }
         }
+        if(cont>1)
+           tpj = random.nextInt(7);
+           cambiarcolorconfiguracion();
+
         for (int pas = 0; pas < k; ++pas) {
             for (int j = 3; j < numeroColumnas - 3; j++) {
                 matrizDeJuego[3 + pas][j] = new PizarradeCeldas();
@@ -1467,6 +1476,10 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             /*al perder y tocar la pantalla se vuelve a la pantalla principal*/
             Toast.makeText(getBaseContext(), "Vuelve a la pantalla principal ", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(PantallaJuego.this, MainActivity.class);
+
+            intent.putExtra("Puntuacion", puntuacion);
+            intent.putExtra("Nombrevuelta", nombrejugador);
+
             startActivity(intent);
             finish();
             return true;
@@ -1505,8 +1518,9 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         /*al pulsar dos veces se vuelve a la pantalla anterior*/
         if (TiempoDeEspera + 1500 > System.currentTimeMillis()) {
             Intent intent = new Intent(PantallaJuego.this, MainActivity.class);
-
-            //aqui devolver puntuacion
+            //aqui devolver puntuacion y nombre usuario
+            intent.putExtra("Puntuacion", puntuacion);
+            intent.putExtra("Nombrevuelta", nombrejugador);
             startActivity(intent);
             finish();
         } else {
