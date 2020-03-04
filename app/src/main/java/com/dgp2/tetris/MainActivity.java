@@ -53,15 +53,18 @@ public class MainActivity extends AppCompatActivity {
             if(puntos>val[i]){
                 posicion=i;
             }
-            posnom[i] = preferences.getString("nom"+i, "");
+            posnom[i] = preferences.getString("nom"+i, "padawan");
             if(posnom[i].isEmpty()){
-                posnom[i]= "padawan";
+                posnom[i]="padawan";
             }
         }
-        for (int i=9;i>posicion;i++){
-            val[i] =val[i-1];
+        if(puntos!=0){
+            for (int i=9;i>posicion;i++){
+                  val[i] = val[i-1];
+            }
+             val[posicion]=puntos;
+             posnom[posicion]=nombre;
         }
-        val[posicion]=puntos;
         for (int i=0;i<10;i++){
             myEditor.putInt("punt"+i, val[i]);
             myEditor.putString("nom"+i,  posnom[i]);
@@ -80,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
 
                 intent = new Intent(MainActivity.this, Ranking.class);
+
+                for (int i=0;i<10;i++){
+                    intent.putExtra("punt"+i, val[i]);
+                    intent.putExtra("nom"+i,  posnom[i]);
+                }
                 startActivity(intent);
                 finish();
             }

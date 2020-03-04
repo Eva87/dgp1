@@ -4,27 +4,218 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".Ranking">
 
+    <EditText
+        android:id="@+id/puntos9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre9"
+        app:layout_constraintTop_toBottomOf="@+id/puntos8" />
+
+    <EditText
+        android:id="@+id/nombre9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre8" />
+
+    <EditText
+        android:id="@+id/puntos6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre6"
+        app:layout_constraintTop_toBottomOf="@+id/puntos5" />
+
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/volverranking"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginStart="136dp"
-        android:layout_marginTop="352dp"
+        android:layout_marginStart="72dp"
+        android:background="@android:color/transparent"
         android:onClick="volveratrasranking"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/puntos10"
         app:srcCompat="@drawable/volver" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="390dp"
-        android:layout_height="322dp"
+    <EditText
+        android:id="@+id/nombre1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
         android:text="TextView"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/puntos1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/nombre2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre1" />
+
+    <EditText
+        android:id="@+id/puntos2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre2"
+        app:layout_constraintTop_toBottomOf="@+id/puntos1" />
+
+    <EditText
+        android:id="@+id/nombre3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre2" />
+
+    <EditText
+        android:id="@+id/puntos3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre3"
+        app:layout_constraintTop_toBottomOf="@+id/puntos2" />
+
+    <EditText
+        android:id="@+id/nombre4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre3" />
+
+    <EditText
+        android:id="@+id/puntos4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre4"
+        app:layout_constraintTop_toBottomOf="@+id/puntos3" />
+
+    <EditText
+        android:id="@+id/nombre5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre4" />
+
+    <EditText
+        android:id="@+id/puntos5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre5"
+        app:layout_constraintTop_toBottomOf="@+id/puntos4" />
+
+    <EditText
+        android:id="@+id/nombre6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre5" />
+
+    <EditText
+        android:id="@+id/nombre7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre6" />
+
+    <EditText
+        android:id="@+id/puntos7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre7"
+        app:layout_constraintTop_toBottomOf="@+id/puntos6" />
+
+    <EditText
+        android:id="@+id/nombre8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre7" />
+
+    <EditText
+        android:id="@+id/puntos8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre8"
+        app:layout_constraintTop_toBottomOf="@+id/puntos7" />
+
+    <EditText
+        android:id="@+id/nombre10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombre9" />
+
+    <EditText
+        android:id="@+id/puntos10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/nombre10"
+        app:layout_constraintTop_toBottomOf="@+id/puntos9" />
 </androidx.constraintlayout.widget.ConstraintLayout>
