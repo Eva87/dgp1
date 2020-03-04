@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="4dp"
-        android:text="Padawan"
+        android:text="sith"
         android:textColor="#ffffff"
         android:ems="10"
         app:layout_constraintStart_toEndOf="@+id/textView5"

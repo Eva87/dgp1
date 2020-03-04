@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private long tiempoesperavolver;
     private String username;
     private int puntos;
-    private String nombre;
+    private String nombre="padawan";
     int tp;
     int val[]= new int[10];
     String posnom[]= new String[10];
@@ -48,23 +48,25 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor myEditor = preferences.edit();
 
         int posicion=0;
+        boolean si=false;
         for (int i=0;i<10;i++){
             val[i] = preferences.getInt("punt"+i, 0);
-            if(puntos>val[i]){
+            if(!si && puntos>val[i]){
                 posicion=i;
+                si=true;
             }
             posnom[i] = preferences.getString("nom"+i, "padawan");
-            if(posnom[i].isEmpty()){
-                posnom[i]="padawan";
-            }
         }
         if(puntos!=0){
-            for (int i=9;i>posicion;i++){
+            for (int i=9;i>posicion;i--){
                   val[i] = val[i-1];
+                  posnom[i]=posnom[i-1];
             }
-             val[posicion]=puntos;
-             posnom[posicion]=nombre;
+
+            val[posicion]=puntos;
+            posnom[posicion]=nombre;
         }
+
         for (int i=0;i<10;i++){
             myEditor.putInt("punt"+i, val[i]);
             myEditor.putString("nom"+i,  posnom[i]);

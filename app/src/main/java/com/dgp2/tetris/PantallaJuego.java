@@ -459,6 +459,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 /*al pulsar el boton se reinicia el juego si no te gusta como esta llendo la partida*/
 
                 Intent intent = new Intent(PantallaJuego.this, PantallaJuego.class);
+                intent.putExtra("Nombrevuelta", nombrejugador);
                 startActivity(intent);
                 finish();
 
