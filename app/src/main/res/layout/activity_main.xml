@@ -4,62 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/inicio"
+    android:background="@drawable/fondoinicio"
     tools:context=".MainActivity">
 
     <ImageButton
         android:id="@+id/botonPlay"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="448dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginBottom="15dp"
         android:background="@android:color/transparent"
         android:onClick="iniciarJuego"
         android:scaleType="fitXY"
         android:src="@drawable/play"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/ayuda"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/ayuda"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="448dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         android:src="@drawable/ayuda"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/configuracion"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="448dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toEndOf="@+id/ranking"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ayuda"
         app:srcCompat="@drawable/s" />
 
     <ImageButton
         android:id="@+id/ranking"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="448dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginBottom="15dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ranking"
-        tools:layout_editor_absoluteX="185dp" />
+        app:layout_constraintBottom_toTopOf="@+id/configuracion"
+        app:layout_constraintStart_toEndOf="@+id/botonPlay"
+        app:srcCompat="@drawable/ranking" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         android:text="Introduce tu nombre"
         android:textColor="#ffffff"
         app:layout_constraintTop_toTopOf="parent"
@@ -70,10 +71,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="4dp"
+        android:ems="10"
         android:text="sith"
         android:textColor="#ffffff"
-        android:ems="10"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="parent" />
 
