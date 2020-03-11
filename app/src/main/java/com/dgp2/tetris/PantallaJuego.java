@@ -60,7 +60,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     private float timestamp;
     PizarradeCeldas[][] matrizDeJuego;
     boolean estadoVelocidadRapidez;
-    boolean piezaextra=false;
+    int piezaextra=0;
     long tiempo50;
     long tiempo0;
     /*se inicializan los colores a jugar*/
@@ -79,7 +79,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     boolean inicio;
     String rapidez;
     int puntuacion;
-    boolean juegoEnMarcha, juegoEnPausa, estadoActual,estadoActual2;
+    boolean juegoEnMarcha, juegoEnPausa, estadoActual,p;
     private long TiempoDeEspera;
     ImageButton botonizquierda, botonderecha,botonpausa, botonabajo, botonrapido, reiniciarjuego;
 
@@ -563,7 +563,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         }
     }.start();
 
-    CountDownTimer countDownTimer2 = new CountDownTimer(100000, 5000) {//poner  1000000000  y  30000
+    CountDownTimer countDownTimer2 = new CountDownTimer(100000, 30000) {//poner  1000000000  y  30000
         public void onTick(long millisUntilFinished) {
             Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
 
@@ -572,28 +572,11 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             FijarMatrizJuego();*/
            // estadoVelocidadRapidez=true;
            // estadoActual= CrearLaForma();
-            if(!piezaextra){
-                piezaextra=true;
-            }else {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        // despues de 1.6 segundos
-                        estadoActual = CrearLaForma();
-
-                        estadoVelocidadRapidez = true;
-
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_DERECHA, formaActual);
-                        MoverForma(IR_DERECHA, formaActual);
-                        MoverForma(IR_DERECHA, formaActual);
-                        estadoActual = CrearLaForma();
-                    }
-                }, 1600);
-                estadoVelocidadRapidez = true;
+            if(piezaextra==0&&p){
+                piezaextra=1;
+            }
+            if(!p){
+                p=true;
             }
         }
 
@@ -1456,6 +1439,32 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 Toast.makeText(getBaseContext(), "Tiempo ", Toast.LENGTH_SHORT).show();
                 tiempo0=tiempo50;
             }*/
+            if(piezaextra>0){
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        // despues de 1.6 segundos
+                        estadoActual = false;
+                        estadoActual = CrearLaForma();
+
+                        estadoVelocidadRapidez = true;
+
+                       /* MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_DERECHA, formaActual);
+                        MoverForma(IR_DERECHA, formaActual);
+                        MoverForma(IR_DERECHA, formaActual);*/
+                       // estadoActual = CrearLaForma();
+                    }
+                }, 1600);
+                estadoVelocidadRapidez = false;
+                piezaextra=0;
+            }
+
+
+
             if (!juegoEnMarcha) {
                 return;
             }

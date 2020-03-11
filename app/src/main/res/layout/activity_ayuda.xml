@@ -14,7 +14,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:text="En la pantalla de juego hay dos botones de izquierda y derecha, uno de añadir rapidez, uno que se incrementa la velocidad por 3  y uno de pausa, ademas de esto para girar las fichas se puede pulsar en cualquier parte de la pantalla que no tenga un boton "
+        android:text="En la pantalla de juego hay dos botones de izquierda y derecha, uno de bajar una posicion mas cada vez, uno de bajar rapidamente  y uno de pausa, ademas de esto para girar las fichas se puede pulsar en cualquier parte de la pantalla que no tenga un boton "
         android:textSize="14sp"
         android:textColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
