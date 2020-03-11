@@ -565,7 +565,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
     CountDownTimer countDownTimer2 = new CountDownTimer(100000, 30000) {//poner  1000000000  y  30000
         public void onTick(long millisUntilFinished) {
-            Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
 
          /*   CrearLaFormaextra clfe = new CrearLaFormaextra();
             clfe.crearformaextra();
@@ -1449,14 +1449,6 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
                         estadoVelocidadRapidez = true;
 
-                       /* MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_ABAJO, formaActual);
-                        MoverForma(IR_DERECHA, formaActual);
-                        MoverForma(IR_DERECHA, formaActual);
-                        MoverForma(IR_DERECHA, formaActual);*/
-                       // estadoActual = CrearLaForma();
                     }
                 }, 1600);
                 estadoVelocidadRapidez = false;

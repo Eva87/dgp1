@@ -9,14 +9,14 @@
 
     <TextView
         android:id="@+id/textoayuda4"
-        android:layout_width="337dp"
-        android:layout_height="100dp"
+        android:layout_width="342dp"
+        android:layout_height="169dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:text="En la pantalla de juego hay dos botones de izquierda y derecha, uno de bajar una posicion mas cada vez, uno de bajar rapidamente  y uno de pausa, ademas de esto para girar las fichas se puede pulsar en cualquier parte de la pantalla que no tenga un boton "
-        android:textSize="14sp"
+        android:text="En la pantalla de juego hay dos botones de izquierda y derecha, uno de bajar una posicion mas cada vez, uno de bajar rapidamente  y uno de pausa, ademas de esto para girar las fichas se puede pulsar en cualquier parte de la pantalla que no tenga un boton. Ojo que se han incrementado dos nuevos niveles de dificultad cada 50 segundos se reduce la altura de juego en dos lineas y cada 30 segundos aparece una nueva pieza dejando la anterior en la posicion en la que se encontraba"
         android:textColor="#ffffff"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,13 +66,13 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="336dp"
-        android:layout_height="37dp"
+        android:layout_width="343dp"
+        android:layout_height="34dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:textColor="#ffffff"
         android:text="En esta misma pantalla encontramos un boton para volver atras   "
+        android:textColor="#ffffff"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,8 +80,8 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="335dp"
-        android:layout_height="76dp"
+        android:layout_width="346dp"
+        android:layout_height="69dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -94,13 +94,13 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="333dp"
-        android:layout_height="98dp"
+        android:layout_width="346dp"
+        android:layout_height="58dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:textColor="#ffffff"
         android:text="En la pantalla de ranking se puede observar el ranking de 10 posiciones y un boton para volver atras"
+        android:textColor="#ffffff"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
