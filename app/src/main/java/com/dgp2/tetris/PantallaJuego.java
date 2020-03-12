@@ -1230,8 +1230,11 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                 }
             }
         }
-        if(cont>1)
-           tpj = random.nextInt(7);
+        if(cont>1){
+
+            tpj = random.nextInt(7);
+            cont=0;
+        }
            cambiarcolorconfiguracion();
 
         for (int pas = 0; pas < k; ++pas) {
