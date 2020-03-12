@@ -72,6 +72,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     int colort;
     int coloro;
 
+    int contadoraleatorias=0;
+
     boolean boleanolinea=false;
 
     int RAPIDEZNORMAL = 500;
@@ -546,38 +548,24 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         public void onTick(long millisUntilFinished) {
             //Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
             if(numfilasmodifpreferences>4) {
-               /* numfilasmodifpreferences -= 2;
-                numeroFilas = numfilasmodifpreferences + 6;*/
                 varcortar=varcortar+2;
             }
-
         }
-
         public void onFinish() {
-
            // Toast.makeText(getBaseContext(), "Tiempo " + varcortar, Toast.LENGTH_SHORT).show();
-            // numeroFilas=numeroFilas+2;
-            //setnumerofilas();
-            /*numeroFilas=numeroFilas-2;
-            numfilasmodifpreferences=numfilasmodifpreferences-2;*/
         }
     }.start();
 
     CountDownTimer countDownTimer2 = new CountDownTimer(100000, 30000) {//poner  1000000000  y  30000
         public void onTick(long millisUntilFinished) {
            // Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
-
-         /*   CrearLaFormaextra clfe = new CrearLaFormaextra();
-            clfe.crearformaextra();
-            FijarMatrizJuego();*/
-           // estadoVelocidadRapidez=true;
-           // estadoActual= CrearLaForma();
             if(piezaextra==0&&p){
                 piezaextra=1;
             }
             if(!p){
                 p=true;
             }
+            contadoraleatorias++;
         }
 
         public void onFinish() {
@@ -1445,13 +1433,77 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
                     public void run() {
                         // despues de 1.6 segundos
                         estadoActual = false;
+                        MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_ABAJO, formaActual);
+                        MoverForma(IR_ABAJO, formaActual);
+                        if(contadoraleatorias==1) {
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                        }
+                        if(contadoraleatorias==2) {
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                        }
+                        if(contadoraleatorias==3) {
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                        }
+                        if(contadoraleatorias==4) {
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                        }
+                        if(contadoraleatorias>5&&contadoraleatorias%2!=0 ) {
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_DERECHA, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                        }
+                        if(contadoraleatorias>5&&contadoraleatorias%2==0) {
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_IZQUIERDA, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                            MoverForma(IR_ABAJO, formaActual);
+                        }
                         estadoActual = CrearLaForma();
 
-                        estadoVelocidadRapidez = true;
+                        estadoVelocidadRapidez = false;
 
                     }
                 }, 1600);
-                estadoVelocidadRapidez = false;
+                estadoVelocidadRapidez = true;
                 piezaextra=0;
             }
 
