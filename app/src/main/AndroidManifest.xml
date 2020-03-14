@@ -12,12 +12,13 @@
         android:roundIcon="@mipmap/indice"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Cambiocolorpiezas"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".Cambiocolorpiezas" />
         <activity android:name=".Configuracion" />
         <activity android:name=".Ranking" />
         <activity android:name=".ayuda" />
         <activity android:name=".PantallaJuego" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".PantallaCarga">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
