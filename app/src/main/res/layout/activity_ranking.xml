@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo2"
+    android:background="@drawable/fondoranking"
     tools:context=".Ranking">
 
     <EditText
@@ -20,7 +20,7 @@
     <EditText
         android:id="@+id/nombre9"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -30,7 +30,7 @@
     <EditText
         android:id="@+id/puntos6"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -39,22 +39,23 @@
 
     <ImageButton
         android:id="@+id/volverranking"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="180dp"
-        android:layout_marginTop="170dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/transparent"
         android:onClick="volveratrasranking"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/volver" />
+        app:srcCompat="@drawable/iratras" />
 
     <EditText
         android:id="@+id/nombre1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="85dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,8 +64,9 @@
     <EditText
         android:id="@+id/puntos1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="85dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toEndOf="@+id/nombre1"
@@ -73,7 +75,7 @@
     <EditText
         android:id="@+id/nombre2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -83,7 +85,7 @@
     <EditText
         android:id="@+id/puntos2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -93,7 +95,7 @@
     <EditText
         android:id="@+id/nombre3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -103,7 +105,7 @@
     <EditText
         android:id="@+id/puntos3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -113,7 +115,7 @@
     <EditText
         android:id="@+id/nombre4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -123,7 +125,7 @@
     <EditText
         android:id="@+id/puntos4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -133,7 +135,7 @@
     <EditText
         android:id="@+id/nombre5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -143,7 +145,7 @@
     <EditText
         android:id="@+id/puntos5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -153,7 +155,7 @@
     <EditText
         android:id="@+id/nombre6"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -163,7 +165,7 @@
     <EditText
         android:id="@+id/nombre7"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -173,7 +175,7 @@
     <EditText
         android:id="@+id/puntos7"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -183,7 +185,7 @@
     <EditText
         android:id="@+id/nombre8"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -193,7 +195,7 @@
     <EditText
         android:id="@+id/puntos8"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -203,7 +205,7 @@
     <EditText
         android:id="@+id/nombre10"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -213,10 +215,202 @@
     <EditText
         android:id="@+id/puntos10"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toEndOf="@+id/nombre10"
         app:layout_constraintTop_toBottomOf="@+id/puntos9" />
+
+    <ImageView
+        android:id="@+id/imagenranking1"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="85dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imagenranking2"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking1" />
+
+    <ImageView
+        android:id="@+id/imagenranking3"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking2" />
+
+    <ImageView
+        android:id="@+id/imagenranking4"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking3" />
+
+    <ImageView
+        android:id="@+id/imagenranking5"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking4" />
+
+    <ImageView
+        android:id="@+id/imagenranking6"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking5" />
+
+    <ImageView
+        android:id="@+id/imagenranking7"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking6" />
+
+    <ImageView
+        android:id="@+id/imagenranking8"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking7" />
+
+    <ImageView
+        android:id="@+id/imagenranking9"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking8" />
+
+    <ImageView
+        android:id="@+id/imagenranking10"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="200dp"
+        android:background="@drawable/imafo10"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenranking9" />
+
+    <ImageView
+        android:id="@+id/avat1"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="85dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat2"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking2"
+        app:layout_constraintTop_toBottomOf="@+id/avat1"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat3"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking3"
+        app:layout_constraintTop_toBottomOf="@+id/avat2"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat4"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking4"
+        app:layout_constraintTop_toBottomOf="@+id/avat3"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat5"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking5"
+        app:layout_constraintTop_toBottomOf="@+id/avat4"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat6"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking6"
+        app:layout_constraintTop_toBottomOf="@+id/avat5"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat7"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking7"
+        app:layout_constraintTop_toBottomOf="@+id/avat6"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat8"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking8"
+        app:layout_constraintTop_toBottomOf="@+id/avat7"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat9"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking9"
+        app:layout_constraintTop_toBottomOf="@+id/avat8"
+        app:srcCompat="@drawable/imafo10" />
+
+    <ImageView
+        android:id="@+id/avat10"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imagenranking10"
+        app:layout_constraintTop_toBottomOf="@+id/avat9"
+        app:srcCompat="@drawable/imafo10" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import android.graphics.Color;
 
 import androidx.core.view.GestureDetectorCompat;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Random;
 
@@ -47,6 +49,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     int numfilasmodifpreferences=20; /*si 40 tarda 28 segundos*/
     int numcolumnasasmodifpreferences=10; /*40*20*/
     int varcortar=-2;
+    int variablepuntosvuelta=0;
     /*Para la siguiente version que vengan desde las opciones de configuracion
     * el numero de las filas y de las columnas*/
     final Handler operaciones = new Handler();
@@ -80,16 +83,20 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     int RAPIDEZDEPRISA = 50;
     boolean inicio;
     String rapidez;
-    int puntuacion;
+    int puntuacion=0;
     boolean juegoEnMarcha, juegoEnPausa, estadoActual,p;
     private long TiempoDeEspera;
-    ImageButton botonizquierda, botonderecha,botonpausa, botonabajo, botonrapido, reiniciarjuego;
+    ImageButton botonizquierda, botonderecha,botonpausa, botonabajo, botonrapido, reiniciarjuego, volverjugar250ptos;
 
     /*el que cada 30 segundos salga una ficha nueva solo seria posible si el numero de filas fuera mas grande
     * ya que tarda 8 segundos en llegar abajo*/
 
     final int dx[] = {-1, 0, 1, 0};
     final int dy[] = {0, 1, 0, -1};
+
+    private String username;
+    MediaPlayer mp1,mp2,mp3,mp4,mp5,mp6,mp7, mp;
+    int posmu=0, musicon=0;
 
     SensorManager sensorManager;
     Sensor sensor;
@@ -114,6 +121,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
     LinearLayout linearLayout;
 
     Forma formaActual, proximaForma;
+    int variablemusica=1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,8 +134,8 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         inicio=false;
         estadoActual=false;
 
-
-
+        volverjugar250ptos=findViewById(R.id.volverjugar250);
+        volverjugar250ptos.setVisibility(View.INVISIBLE);
         vistaPiezaProxima=  findViewById(R.id.verPieza);
         numeroFilas=numfilasmodifpreferences+6;
         numeroColumnas=numcolumnasasmodifpreferences+6;
@@ -154,19 +163,15 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
 
 */
+        //mp=MediaPlayer.create(this, R.raw.mus1);
+        mp1=MediaPlayer.create(this, R.raw.mus1);
+        mp2=MediaPlayer.create(this, R.raw.mus2);
+        mp3=MediaPlayer.create(this, R.raw.mus3);
+        mp4=MediaPlayer.create(this, R.raw.mus4);
+        mp5=MediaPlayer.create(this, R.raw.mus5);
+        mp6=MediaPlayer.create(this, R.raw.mus6);
+        mp7=MediaPlayer.create(this, R.raw.mus7);
 
-        Bundle datos = this.getIntent().getExtras();
-
-        if(datos != null) {
-            tpj = datos.getInt("TipoPieza");
-            nombrejugador=datos.getString("Nombre");
-        }
-        else{
-            tpj=0;
-            nombrejugador="Anonimo";
-        }
-
-        Toast.makeText(this, nombrejugador, Toast.LENGTH_SHORT).show();
 
         TextView textView = findViewById(R.id.pierde);
         textView.setVisibility(View.INVISIBLE);
@@ -187,7 +192,6 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         paint = new Paint();
         paintnueva=new Paint();
         linearLayout = findViewById(R.id.game_board);
-        puntuacion = 0;
         estadoActual = false;
 
         detectorDeGestos = new GestureDetectorCompat(this, this);
@@ -382,6 +386,27 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
         new Thread(proceso2).start();*/
 
+        Bundle datos = this.getIntent().getExtras();
+        SharedPreferences preferences = getSharedPreferences(username, Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = preferences.edit();
+        musicon = preferences.getInt("Music", 0);
+
+        if (musicon == 1) {
+
+            mp1.start();
+        }
+        if(datos != null) {
+            tpj = datos.getInt("TipoPieza");
+            nombrejugador=datos.getString("Nombre");
+            puntuacion=datos.getInt("Puntuacion");
+            variablepuntosvuelta=datos.getInt("Variablepuntosvuelta");
+        }
+        else{
+            tpj=0;
+            nombrejugador="Anonimo";
+        }
+
+        Toast.makeText(this, nombrejugador, Toast.LENGTH_SHORT).show();
 
         Thread hilo1 = new Thread(new Runnable()
         {
@@ -533,13 +558,55 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
 
                 Intent intent = new Intent(PantallaJuego.this, PantallaJuego.class);
                 intent.putExtra("Nombrevuelta", nombrejugador);
+
+
                 startActivity(intent);
                 finish();
 
             }
         });
 
+        volverjugar250ptos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                /*al pulsar el boton se reinicia el juego si no te gusta como esta llendo la partida*/
+                if((puntuacion+(250*variablepuntosvuelta))>=250){
+                    Intent intent = new Intent(PantallaJuego.this, PantallaJuego.class);
+                    intent.putExtra("Nombrevuelta", nombrejugador);
+                    intent.putExtra("Puntuacion", puntuacion);
+                    intent.putExtra("Variablepuntosvuelta", variablepuntosvuelta+1);
+
+
+
+                    mp1.stop();
+                    mp2.stop();
+                    mp3.stop();
+                    mp4.stop();
+                    mp5.stop();
+                    mp6.stop();
+                    mp7.stop();
+                    variablemusica=0;
+                    try {
+                        mp1.prepare();
+                        mp2.prepare();
+                        mp3.prepare();
+                        mp4.prepare();
+                        mp5.prepare();
+                        mp6.prepare();
+                        mp7.prepare();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+
+
+                    startActivity(intent);
+                    finish();
+
+                }
+
+            }
+        });
 
 
         start();
@@ -548,7 +615,7 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         public void onTick(long millisUntilFinished) {
             //Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
             if(numfilasmodifpreferences>4) {
-                varcortar=varcortar+2;
+              //  varcortar=varcortar+2;
             }
         }
         public void onFinish() {
@@ -556,14 +623,14 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         }
     }.start();
 
-    CountDownTimer countDownTimer2 = new CountDownTimer(100000, 30000) {//poner  1000000000  y  30000
+    CountDownTimer countDownTimer2 = new CountDownTimer(1000000000, 30000) {//poner  1000000000  y  30000
         public void onTick(long millisUntilFinished) {
            // Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
             if(piezaextra==0&&p){
                 piezaextra=1;
             }
             if(!p){
-                p=true;
+              //  p=true;
             }
             contadoraleatorias++;
         }
@@ -575,17 +642,103 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
         }
     }.start();
 
-    public void cambiarcoloracapon(){
 
-       /* int colorJ=Color.YELLOW;
-        int color2=Color.rgb(248, 138, 17);
-        int color5=Color.CYAN;
-        int colorl=Color.rgb(255, 51, 249);
-        int colori=Color.RED;
-        int colort=Color.rgb(108, 230, 21);
-        int coloro=Color.BLUE;*/
+    CountDownTimer countDownTimermusica = new CountDownTimer(1000000000, 20000) {//poner  1000000000  y  30000
+        public void onTick(long millisUntilFinished) {
+            // Toast.makeText(getBaseContext(), (String.format(Locale.getDefault(), "%d sec.", millisUntilFinished / 1000L)), Toast.LENGTH_SHORT).show();
+            if (musicon == 0) {
 
-    }
+                variablemusica=0;
+            }
+            switch (variablemusica){
+                case 1:
+                    variablemusica=2;
+
+                    mp1.stop();
+                    try {
+                        mp1.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp1.seekTo(0);
+                    mp2.start();
+                    break;
+                case 2:
+                    variablemusica=3;
+                    mp2.stop();
+                    try {
+                        mp2.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp2.seekTo(0);
+                    mp3.start();
+                    break;
+                case 3:
+                    variablemusica=4;
+                    mp3.stop();
+                    try {
+                        mp3.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp3.seekTo(0);
+                    mp4.start();
+                    break;
+                case 4:
+                    variablemusica=5;
+                    mp4.stop();
+                    try {
+                        mp4.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp4.seekTo(0);
+                    mp5.start();
+                    break;
+                case 5:
+                    variablemusica=6;
+                    mp5.stop();
+                    try {
+                        mp5.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp5.seekTo(0);
+                    mp6.start();
+                    break;
+                case 6:
+                    variablemusica=7;
+                    mp6.stop();
+                    try {
+                        mp6.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp6.seekTo(0);
+                    mp7.start();
+                    break;
+                case 7:
+                    variablemusica=1;
+                    mp7.stop();
+                    try {
+                        mp7.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mp7.seekTo(0);
+                    mp1.start();
+                    break;
+            }
+        }
+
+        public void onFinish() {
+
+            //   Toast.makeText(getBaseContext(), "Tiempo " + varcortar, Toast.LENGTH_SHORT).show();
+
+        }
+    }.start();
+
 
     public void start(){
 
@@ -1314,6 +1467,11 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             /*si se pierde la partida se invisibiliza el boton de reiniciar el juego poniendo visibilidad al cartel de has perdido
             * y un segundo y medio mas tarde  mostrando el carte del pulsar la pantalla para volver al menu inicio*/
             reiniciarjuego.setVisibility(View.INVISIBLE);
+
+            if((puntuacion-(250*variablepuntosvuelta))>=250){
+                volverjugar250ptos.setVisibility(View.VISIBLE);
+
+            }
             TextView textView = findViewById(R.id.pierde);
             textView.setVisibility(View.VISIBLE);
 
@@ -1679,6 +1837,28 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             intent.putExtra("Puntuacion", puntuacion);
             intent.putExtra("Nombrevuelta", nombrejugador);
 
+
+            mp1.stop();
+            mp2.stop();
+            mp3.stop();
+            mp4.stop();
+            mp5.stop();
+            mp6.stop();
+            mp7.stop();
+            variablemusica=0;
+            try {
+                mp1.prepare();
+                mp2.prepare();
+                mp3.prepare();
+                mp4.prepare();
+                mp5.prepare();
+                mp6.prepare();
+                mp7.prepare();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+
             startActivity(intent);
             finish();
             return true;
@@ -1720,6 +1900,29 @@ public class PantallaJuego extends Activity implements GestureDetector.OnGesture
             //aqui devolver puntuacion y nombre usuario
             intent.putExtra("Puntuacion", puntuacion);
             intent.putExtra("Nombrevuelta", nombrejugador);
+            variablemusica=0;
+
+
+            mp1.stop();
+            mp2.stop();
+            mp3.stop();
+            mp4.stop();
+            mp5.stop();
+            mp6.stop();
+            mp7.stop();
+            try {
+                mp1.prepare();
+                mp2.prepare();
+                mp3.prepare();
+                mp4.prepare();
+                mp5.prepare();
+                mp6.prepare();
+                mp7.prepare();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+
             startActivity(intent);
             finish();
         } else {

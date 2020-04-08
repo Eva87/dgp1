@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="avatar">
+        <item>Han</item>
+        <item>Obi-Wan</item>
+        <item>Soldado</item>
+        <item>Luke</item>
+        <item>Leia</item>
+        <item>Yoda</item>
+        <item>C3PO</item>
+        <item>Vader</item>
+        <item>R2D2</item>
+        <item>Boba</item>
+    </string-array>
+</resources>
