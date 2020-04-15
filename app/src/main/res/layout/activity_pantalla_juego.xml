@@ -39,8 +39,7 @@
             android:layout_height="200dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            android:src="@drawable/continuar"
-            android:textColor="#FFFFFF" />
+            android:src="@drawable/continuar" />
 
         <ImageButton
             android:id="@+id/finjuego"
@@ -48,7 +47,7 @@
             android:layout_height="200dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            android:src="@drawable/finalizarjuego" />
+            android:src="@drawable/finalizarjuego"/>
 
     </LinearLayout>
 
@@ -67,7 +66,7 @@
         android:id="@+id/botonderecha"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="15dp"
         android:background="@drawable/derecha"
         android:scaleType="fitXY"
         android:text="Button"
@@ -94,7 +93,7 @@
         android:background="@android:color/transparent"
         android:scaleType="centerInside"
         android:src="@drawable/abajo"
-        app:layout_constraintStart_toStartOf="@+id/botonderecha"
+        app:layout_constraintStart_toEndOf="@+id/botonizquierda"
         app:layout_constraintTop_toBottomOf="@+id/game_board" />
 
     <TextView
@@ -134,6 +133,7 @@
         android:id="@+id/reiniciojuego"
         android:layout_width="55dp"
         android:layout_height="55dp"
+        android:layout_marginEnd="10dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         android:src="@drawable/reiniciar"
@@ -155,7 +155,7 @@
         android:id="@+id/avatarjugador"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/imafo1"
         app:layout_constraintEnd_toStartOf="@+id/reiniciojuego"
         app:layout_constraintTop_toTopOf="parent" />
@@ -179,6 +179,7 @@
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         android:src="@drawable/derecha"
+        android:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/girarpieza"
         app:layout_constraintTop_toBottomOf="@+id/game_board" />
 

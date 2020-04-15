@@ -14,6 +14,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre9"
         app:layout_constraintTop_toBottomOf="@+id/puntos8" />
 
@@ -24,6 +28,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre8" />
 
@@ -34,6 +42,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre6"
         app:layout_constraintTop_toBottomOf="@+id/puntos5" />
 
@@ -58,6 +70,10 @@
         android:layout_marginTop="85dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,6 +85,10 @@
         android:layout_marginTop="85dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre1"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,6 +99,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre1" />
 
@@ -89,6 +113,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre2"
         app:layout_constraintTop_toBottomOf="@+id/puntos1" />
 
@@ -99,6 +127,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre2" />
 
@@ -109,6 +141,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre3"
         app:layout_constraintTop_toBottomOf="@+id/puntos2" />
 
@@ -119,6 +155,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre3" />
 
@@ -129,6 +169,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre4"
         app:layout_constraintTop_toBottomOf="@+id/puntos3" />
 
@@ -139,6 +183,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre4" />
 
@@ -149,6 +197,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre5"
         app:layout_constraintTop_toBottomOf="@+id/puntos4" />
 
@@ -159,6 +211,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre5" />
 
@@ -169,6 +225,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre6" />
 
@@ -179,6 +239,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre7"
         app:layout_constraintTop_toBottomOf="@+id/puntos6" />
 
@@ -189,6 +253,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre7" />
 
@@ -199,6 +267,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre8"
         app:layout_constraintTop_toBottomOf="@+id/puntos7" />
 
@@ -209,6 +281,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombre9" />
 
@@ -219,6 +295,10 @@
         android:layout_marginStart="10dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintStart_toEndOf="@+id/nombre10"
         app:layout_constraintTop_toBottomOf="@+id/puntos9" />
 
